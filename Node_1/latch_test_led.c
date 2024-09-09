@@ -3,8 +3,8 @@
 #define BASE_ADDRESS 0x1000 // External memory base address A CHANGER
 #define LED_PORT 0x0500 // Example address for the latch output connected to LEDs A CHANGER
 
-#include "sram.h"
-#include "../misc/memory_mapping.h"
+#include "sram.h" //???
+#include "../misc/memory_mapping.h" //???
 #include <avr/io.h>
 #include <stdlib.h>
 #include <stdio.h>
