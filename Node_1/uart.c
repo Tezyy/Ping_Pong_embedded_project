@@ -49,6 +49,7 @@ only one UCSRB for each USART peripheral(unless there are multiple USART periphe
 On an ATmega microcontroller with two USARTs, we have UCSR0B for USART0 and UCSR1B for USART1.
 We can configure the second UART with the equivalent UCSR1B register.*/
     UCSRB |= (1<<RXCIE) //To enable interrupt-based reception we need to set HIGH the Receive Complete Interrupt Enable(RXCIE) bit in UCSRB
+    sei();
 }
 
 /*When the RXC flag is set (when a byte is received), this ISR is executed.*/
