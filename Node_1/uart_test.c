@@ -1,7 +1,7 @@
 /*Test to verify the driver (copy-paste in main to try)*/
 int main(void) 
 {
-    uart_init(MYUBRR);
+    USART_Init(MYUBRR);
   
     /*char message[] = "Test UART\n"; 
     for (int i = 0; message[i] != '\0'; i++) 
