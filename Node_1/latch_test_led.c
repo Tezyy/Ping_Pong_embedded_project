@@ -11,15 +11,15 @@
 
 void xmem_init ( void )
 {
-	MCUCR |= (1 << SRE ); // enable XMEM  
-	SFIOR |= (3 << XMM0); // Mask PC7-PC4 for JTAG
+    MCUCR |= (1 << SRE ); // enable XMEM  
+    SFIOR |= (3 << XMM0); // Mask PC7-PC4 for JTAG
 }
 
 
 void xmem_write(uint8_t data, uint16_t addr)
 {
-	volatile char *ext_mem = (char *)BASE_ADDRESS;
-	ext_mem[addr] = data;
+    volatile char *ext_mem = (char *)BASE_ADDRESS;
+    ext_mem[addr] = data;
 }
 
 int main(void) {
