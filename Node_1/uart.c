@@ -48,7 +48,7 @@ void USART_Notif_receive_data (void)
 only one UCSRB for each USART peripheral(unless there are multiple USART peripherals, like USART0 and USART1).
 On an ATmega microcontroller with two USARTs, we have UCSR0B for USART0 and UCSR1B for USART1.
 We can configure the second UART with the equivalent UCSR1B register.*/
-    UCSR0B |= (1<<RXCIE0) //To enable interrupt-based reception we need to set HIGH the Receive Complete Interrupt Enable(RXCIE) bit in UCSRB
+    UCSR0B |= (1<<RXCIE0); //To enable interrupt-based reception we need to set HIGH the Receive Complete Interrupt Enable(RXCIE) bit in UCSRB
     sei();
 }
 
