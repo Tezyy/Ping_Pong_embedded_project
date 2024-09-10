@@ -7,6 +7,7 @@ This code contains sample code parts from ATmega162 Datasheet*/
 #define F_CPU 4.9152E8 //Clock Speed
 #include <util/delay.h>
 #include  <stdint.h>
+#include "uart.h"
 
 #define BAUD 9600 //Baud USART
 #define MYUBRR F_CPU/16/BAUD-1 
@@ -29,7 +30,7 @@ void USART_Transmit( unsigned char data ) //USART transmit data function
 /* Wait for empty transmit buffer */
 while ( !( UCSR0A & (1<<UDRE0)) );
 /* Put data into buffer, sends the data */
-UDR = data;
+UDR0 = data;
 }
 
 
