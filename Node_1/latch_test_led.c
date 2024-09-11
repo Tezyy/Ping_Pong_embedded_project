@@ -1,7 +1,7 @@
 /*Some parts of this code come from the slides from the lab lecture 2*/
 
 #define BASE_ADDRESS 0x1000 // External memory base address A CHANGER
-#define LED_PORT 0x0500 // Example address for the latch output connected to LEDs A CHANGER
+#define LED_PORT 0x800 // Example address for the latch output connected to LEDs A CHANGER
 
 #include "sram.h" //???
 #include "../misc/memory_mapping.h" //???
