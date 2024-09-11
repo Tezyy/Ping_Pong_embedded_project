@@ -12,7 +12,7 @@
 void xmem_init ( void )
 {
     MCUCR |= (1 << SRE ); // enable XMEM  
-    SFIOR |= (3 << XMM0); // Mask PC7-PC4 for JTAG
+    SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG
 }
 
 
