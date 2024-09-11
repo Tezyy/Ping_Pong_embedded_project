@@ -10,7 +10,7 @@
 
 void sram_init(){
     MCUCR |= (1 << SRE);
-    SFIOR |= (3 << XMM0); //check that too, disabled I/O pins for the sram
+    SFIOR |= (1 << XMM0); 
 }
 
 
