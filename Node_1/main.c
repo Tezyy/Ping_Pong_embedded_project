@@ -24,28 +24,6 @@ void exercise1(void) {
 
 void exercise2(void) {
 
-	//SRAM
-
-	char data = 'c';
-
-	volatile char* ext_ram = 0x1000;
-
-	SRAM_test();
-
-	while(1) {
-		ext_ram[0x000] = data;
-		//printf("OLED command\n");
-		_delay_ms(3000);
-		ext_ram[0x300] = data;
-		//printf("OLED data\n");
-		_delay_ms(3000);
-		ext_ram[0x400] = data;
-		//printf("ADC\n");
-		_delay_ms(3000);
-		ext_ram[0x800] = data;
-		//printf("SRAM\n");
-		_delay_ms(3000);
-	}
 
 }
 */
