@@ -1,5 +1,6 @@
-#define F_CPU 4915200UL
-#include <util/delay.h>
+//Utile ou pas de define dans le .c, suffisant dans le main ?
+//#define F_CPU 4915200UL 
+//#include <util/delay.h>
 
 #include <avr/io.h>
 #include <stdio.h>
