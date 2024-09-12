@@ -13,11 +13,12 @@
 /*
 void exercise1(void) {
 
-	//UART
-
-	put_char(get_char() + 1);		//Returns the character next in the alphabet.
-
-	printf("\nhello world!\n");
+        // Transmit a character (echo back)
+        unsigned char received = USART_Receive(); // Receive data
+        USART_Transmit(received);  // Send it back to the terminal (echo)
+	
+	// Testing the printf
+ 	printf("\nhello world!\n");
 
 }
 
