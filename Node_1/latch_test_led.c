@@ -1,13 +1,10 @@
 /*Some parts of this code come from the slides from the lab lecture 2*/
 
-#define BASE_ADDRESS 0x1000 // External memory base address A CHANGER
-#define LED_PORT 0x800 // Example address for the latch output connected to LEDs A CHANGER
-
-#include "sram.h" //???
-#include "../misc/memory_mapping.h" //???
 #include <avr/io.h>
 #include <stdlib.h>
 #include <stdio.h>
+#define F_CPU 4915200
+#include <util/delay.h>
 
 void xmem_init ( void )
 {
@@ -22,16 +19,20 @@ void xmem_write(uint8_t data, uint16_t addr)
     ext_mem[addr] = data;
 }
 
-int main(void) {
-    uint8_t led_data = 0x01; // first LED on
-    
-    while (1) {
-        xmem_write(led_data, LED_PORT); // Write LED pattern to the latch
-        led_data = led_data << 1;       // Shift to the next LED
-        if (led_data == 0)
-        {
-            led_data = 0x01;            // Reset pattern if all LEDs shifted out
-        }
-        _delay_ms(500); // Add a delay to make the blinking visible
-    }
+int main() {
+    DDRE = 0b10; //Sets ALE (pin 1 on port E) as output.
+    PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
+    PORTA = 0b000001; //Sending an adress.
+
+    _delay_ms(2000);
+
+    PORTE = 0b00; //Sets ALE low. Now the address value is stored.
+
+    _delay_ms(2000);
+
+    PORTA = 0b01010101; //Sends out new address.
+
+    _delay_ms(2000);
+
+    PORTE = 0b10; //Old address is removed  and the new one is sent through.
 }
