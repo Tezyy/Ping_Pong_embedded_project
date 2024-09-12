@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <avr/sleep.h>
 
-//#include "bit_macros.h"
+#include "bit_macros.h"
 #include "uart.h"
 #include "sram.h"
 
