@@ -9,24 +9,19 @@
 #define BASE_ADDRESS 0x1000
 #define LED_PORT 0x0800
 
-void xmem_init ( void )
+void XMEM_init ( void )
 {
       MCUCR |= (1 << SRE ); // enable XMEM
       SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG (XMM2 ?)
 }
 
 
-void xmem_write(uint8_t data, uint16_t addr)
+void XMEM_write(uint8_t data, uint16_t addr)
 {
       volatile char *ext_mem = (char *)BASE_ADDRESS;
       ext_mem[addr] = data;
 }
 
-
-void latch_test()
-{
-      NULL;
-}
 
 void SRAM_test(void)
     {
