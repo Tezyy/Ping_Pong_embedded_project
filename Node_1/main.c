@@ -10,34 +10,52 @@
 #include "uart.h"
 #include "sram.h"
 
+/*
+void exercise1(void) {
 
-/*PART 2 : LATCH AND RAM */
-#define BASE_ADDRESS 0x1000
-#define LED_PORT 0x0800
-void xmem_init ( void )
-{
-      MCUCR |= (1 << SRE ); // enable XMEM
-      SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG
+	//UART
+
+	put_char(get_char() + 1);		//Returns the character next in the alphabet.
+
+	printf("\nhello world!\n");
+
 }
 
+void exercise2(void) {
 
-void xmem_write(uint8_t data, uint16_t addr)
-{
-      volatile char *ext_mem = (char *)BASE_ADDRESS;
-      ext_mem[addr] = data;
+	//SRAM
+
+	char data = 'c';
+
+	volatile char* ext_ram = 0x1000;
+
+	SRAM_test();
+
+	while(1) {
+		ext_ram[0x000] = data;
+		//printf("OLED command\n");
+		_delay_ms(3000);
+		ext_ram[0x300] = data;
+		//printf("OLED data\n");
+		_delay_ms(3000);
+		ext_ram[0x400] = data;
+		//printf("ADC\n");
+		_delay_ms(3000);
+		ext_ram[0x800] = data;
+		//printf("SRAM\n");
+		_delay_ms(3000);
+	}
+
 }
+*/
 
-
-void latch_test()
-{
-      NULL;
-}
 
 int main(void)
 {
       USART_Init(MYUBRR);
       //xmem_init();
       init_printf();
+          
     while(1)
     {
         //unsigned char mess = USART_Receive();
@@ -57,4 +75,6 @@ int main(void)
             _delay_ms(1000);
             PORTE=0x10;
     }
+          
+    return 0;
 }
