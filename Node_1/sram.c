@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "sram.h"
+#include "bit_macros.h"
 
 #define BASE_ADDRESS_SRAM 0x1800
 #define BASE_ADDRESS 0x1000
@@ -11,8 +12,10 @@
 
 void XMEM_init ( void )
 {
-      MCUCR |= (1 << SRE ); // enable XMEM
-      SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG (XMM2 ?)
+	set_bit(MCUCR,SRE);
+	set_bit(SFIOR,XMM0); //Remove 4 Most Significant Bits from address so that JTAG interface doesn't crash
+	//MCUCR |= (1 << SRE ); // enable XMEM
+	//SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG (XMM2 ?)
 }
 
 
@@ -25,7 +28,7 @@ void XMEM_write(uint8_t data, uint16_t addr)
 
 void SRAM_test(void)
     {
-		volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
+	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
         uint16_t ext_ram_size = 0x800;
         uint16_t write_errors = 0;
         uint16_t retrieval_errors = 0;
