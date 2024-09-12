@@ -26,7 +26,7 @@ uint8_t sram_read(uint16_t addr){
     return ret_val;
 }
 
-    void SRAM_test(void)
+void SRAM_test(void)
     {
 		volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
         uint16_t ext_ram_size = 0x800;
