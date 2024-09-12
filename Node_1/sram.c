@@ -21,8 +21,8 @@ void XMEM_init ( void )
 
 void XMEM_write(uint8_t data, uint16_t addr)
 {
-      volatile char *ext_mem = (char *)BASE_ADDRESS;
-      ext_mem[addr] = data;
+    volatile char *ext_mem = (char *)BASE_ADDRESS;
+    ext_mem[addr] = data;
 }
 
 
