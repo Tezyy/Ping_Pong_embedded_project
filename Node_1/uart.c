@@ -54,6 +54,7 @@ int uart_putchar(char c, FILE *stream)
       return 0;
 }
 
+
 void init_printf(void)
 {
       static FILE uart_stdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
