@@ -21,6 +21,21 @@ void exercise1(void) {
 }
 
 void exercise2(void) {
+	DDRE = 0b10; //Sets ALE (pin 1 on port E) as output.
+	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
+	PORTA = 0b000001; //Sending an adress.
+
+	_delay_ms(2000);
+	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
+
+	_delay_ms(2000);
+
+	PORTA = 0b01010101; //Sends out new address.
+
+	_delay_ms(2000);
+
+	PORTE = 0b10; //Old address is removed  and the new one is sent through.
+}
 
 
 }
