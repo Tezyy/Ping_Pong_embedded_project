@@ -13,12 +13,10 @@
 /*
 void exercise1(void) {
 
-        // Transmit a character (echo back)
-        unsigned char received = USART_Receive(); // Receive data
-        USART_Transmit(received);  // Send it back to the terminal (echo)
-	
-	// Testing the printf
- 	printf("\nhello world!\n");
+	unsigned char mess = USART_Receive();
+	USART_Transmit(mess);
+	printf("ouioui");
+	_delay_ms(1000);
 
 }
 
@@ -32,16 +30,11 @@ void exercise2(void) {
 int main(void)
 {
       USART_Init(MYUBRR);
-      //xmem_init();
+      //XMEM_init();
       init_printf();
           
     while(1)
-    {
-        //unsigned char mess = USART_Receive();
-            //USART_Transmit(mess);
-            //printf("ouioui");
-            //_delay_ms(1000);
-            
+    {            
             _delay_ms(1000);
             printf("1");
             PORTA=0x00000000;
