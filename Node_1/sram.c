@@ -1,29 +1,31 @@
 #include <stdlib.h>
-#include "sram.h"
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sram.h"
 
 #define BASE_ADDRESS_SRAM 0x1800
+#define BASE_ADDRESS 0x1000
+#define LED_PORT 0x0800
 
-
-void sram_init(){
-    MCUCR |= (1 << SRE);
-    SFIOR |= (1 << XMM0); 
+void xmem_init ( void )
+{
+      MCUCR |= (1 << SRE ); // enable XMEM
+      SFIOR |= (1 << XMM0); // Mask PC7-PC4 for JTAG (XMM2 ?)
 }
 
 
-void sram_write(uint8_t data, uint16_t addr){
-    volatile char *ext_mem = (char *) BASE_ADDRESS_SRAM;
-    ext_mem[addr] = data;
+void xmem_write(uint8_t data, uint16_t addr)
+{
+      volatile char *ext_mem = (char *)BASE_ADDRESS;
+      ext_mem[addr] = data;
 }
 
 
-uint8_t sram_read(uint16_t addr){
-    volatile char *ext_mem = (char *) BASE_ADDRESS_SRAM;
-    uint8_t ret_val = ext_mem[addr];
-    return ret_val;
+void latch_test()
+{
+      NULL;
 }
 
 void SRAM_test(void)
