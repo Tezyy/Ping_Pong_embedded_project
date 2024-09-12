@@ -1,10 +1,11 @@
 /*Some parts of this code come from the slides from the lab lecture 2*/
-
 #include <avr/io.h>
-#include <stdlib.h>
 #include <stdio.h>
 #define F_CPU 4915200
 #include <util/delay.h>
+
+#include  <stdint.h>
+#include <stdlib.h>
 
 void xmem_init ( void )
 {
