@@ -25,7 +25,23 @@ void exercise1 (void){
 void exercise2 (void){
 	
 	//PORTA = 0b00000010; //Sending an adress.
-	PORTC = 0b00001111; //Sending an SRAM adress
+	PORTC = 0b00001000; //Sending an SRAM adress
+	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
+	
+	_delay_ms(1000);
+	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
+	_delay_ms(1000);
+	
+	//PORTA = 0b00000010; //Sending an adress.
+	PORTC = 0b00000100; //Sending an ADC adress
+	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
+	
+	_delay_ms(1000);
+	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
+	_delay_ms(1000);
+	
+	//PORTA = 0b00000010; //Sending an adress.
+	PORTC = 0b00000010; //Sending an OLED adress
 	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
 	
 	_delay_ms(1000);
