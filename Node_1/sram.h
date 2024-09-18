@@ -1,25 +1,25 @@
-#ifndef XMEM_H
-#define XMEM_H
+#ifndef XMEM_SRAM_H
+#define XMEM_SRAM_H
 
-// Define CPU clock frequency
-#ifndef F_CPU
+// Define CPU clock speed
 #define F_CPU 4915200UL
-#endif
 
-#include <avr/io.h>  // For MCUCR, SFIOR, etc.
-#include <stdio.h>   // For printf
-#include <stdlib.h>  // For rand, srand
-#include <stdint.h>  // For standard integer types like uint8_t, uint16_t
+// AVR standard includes
+#include <util/delay.h>
+#include <avr/io.h>
+#include <avr/sleep.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-// Define base address for external memory
+// Base addresses for external devices
 #define BASE_ADDRESS_SRAM 0x1800
-#define LED_PORT     0x0800
+#define BASE_ADDRESS_OLED 0x1000
+#define BASE_ADDRESS_ADC 0x1400
 
-// Function Prototypes
+// Function prototypes
 void XMEM_init(void);
 void XMEM_write(uint8_t data, uint16_t addr);
 uint8_t XMEM_read(uint16_t addr);
 void SRAM_test(void);
 
-#endif // XMEM_H
+#endif // XMEM_SRAM_H
