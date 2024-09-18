@@ -7,11 +7,13 @@
 #include <stdlib.h>
 
 #define BASE_ADDRESS_SRAM 0x1800
+#define BASE_ADDRESS_OLED 0x1000
+#define BASE_ADDRESS_ADC 0x1400
 
 #include "sram.h"
 
 
-void XMEM_init ( void )
+void XMEM_init(void)
 {
 	MCUCR |= (1 << SRE); // enable XMEM
 	SFIOR |= (1 << XMM2); // Mask PC7-PC4 for JTAG
@@ -21,14 +23,14 @@ void XMEM_init ( void )
 
 void XMEM_write(uint8_t data, uint16_t addr)
 {
-	volatile char *ext_mem = (char *)BASE_ADDRESS_SRAM;
+	volatile char *ext_mem = (char *)0x1000;
 	ext_mem[addr] = data;
 }
 
 uint8_t XMEM_read(uint16_t addr){
-	volatile char *ext_mem = (char *) BASE_ADDRESS_SRAM;
-	uint8_t ret_val = ext_mem[addr]; //Attention ici à comprendre...
-	return ret_val; //Idem...
+	volatile char *ext_mem = (char *) 0x1000;
+	uint8_t ret_val = ext_mem[addr];
+	return ret_val; 
 }
 
 void SRAM_test(void)
