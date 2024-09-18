@@ -1,6 +1,10 @@
 #define F_CPU 4915200UL
 #include <util/delay.h>
 
+#define BASE_ADDRESS_SRAM 0x1800
+#define BASE_ADDRESS_OLED 0x1000
+#define BASE_ADDRESS_ADC 0x1400
+
 #include <avr/io.h>
 #include <avr/sleep.h>
 #include <stdio.h>
@@ -8,6 +12,7 @@
 
 #include "uart.h"
 #include "sram.h"
+
 
 void exercise1 (void){
 		unsigned char mess = USART_Receive();
@@ -18,20 +23,14 @@ void exercise1 (void){
 }
 
 void exercise2 (void){
-	DDRE = 0b10; //Sets ALE (pin 1 on port E) as output.
-	DDRA = 0xFF; //Because we read from PORTA we need to set it as an output.
 	
+	//PORTA = 0b00000010; //Sending an adress.
+	PORTC = 0b00001111; //Sending an SRAM adress
 	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
-	PORTA = 0b00000011; //Sending an adress.
-	_delay_ms(2000);
-	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
-	_delay_ms(2000);
 	
-	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
-	PORTA = 0b00000000; //Sending an adress.
-	_delay_ms(2000);
+	_delay_ms(1000);
 	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
-	_delay_ms(2000);
+	_delay_ms(1000);
 }
 void exercise2_bis (void){
 	//SRAM start:         0x1800    1100 000000000
@@ -43,17 +42,9 @@ void exercise2_bis (void){
 	//OLED-command start: 0x1000    1000 000000000
 	//OLED-command end:   0x11FF    1000 111111111
 	
-	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
-	PORTA = 0x1801; //Sending an adress.
-	_delay_ms(2000);
-	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
-	_delay_ms(2000);
-	
-	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
-	PORTA = 0x1401; //Sending an adress.
-	_delay_ms(2000);
-	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
-	_delay_ms(2000);
+	XMEM_read(0x1100);
+	//XMEM_write(0x11111111,0x1801);
+	_delay_ms(1000);
 
 }
 
@@ -61,17 +52,18 @@ int main(void)
 {
 	DDRE = 0b10; //Sets ALE (pin 1 on port E) as output.
 	DDRA = 0xFF; //Because we read from PORTA we need to set it as an output.
+	DDRC = 0b111; //Three first C pins as outputs
 	
 	USART_Init(MYUBRR);
-	XMEM_init();
 	init_printf();
+	//XMEM_init();
 	//SRAM_test();
 	
 	while(1)
     {
 		//exercise1();
-		//exercise2();
-		exercise2_bis();
+		exercise2();
+		//exercise2_bis();
     }
 	return(0);
 }
