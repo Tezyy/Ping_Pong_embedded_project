@@ -6,10 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BASE_ADDRESS_SRAM 0x1800
-#define BASE_ADDRESS_OLED 0x1000
-#define BASE_ADDRESS_ADC 0x1400
-
 #include "sram.h"
 
 
