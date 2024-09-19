@@ -8,7 +8,6 @@
 
 #include "sram.h"
 
-#define BASE_ADDRESS_ADC 0x1400
 
 //fonctions à coder selon lab lecture 2
 adc_init (void);
