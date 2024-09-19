@@ -1,9 +1,9 @@
 #define F_CPU 4915200UL
 #include <util/delay.h>
 
-#define BASE_ADDRESS_SRAM 0x1800
 #define BASE_ADDRESS_OLED 0x1000
 #define BASE_ADDRESS_ADC 0x1400
+#define BASE_ADDRESS_SRAM 0x1800
 
 #include <avr/io.h>
 #include <avr/sleep.h>
@@ -36,8 +36,20 @@ void exercise2 (void){
 	//OLED-command start: 0x1000    1000 000000000
 	//OLED-command end:   0x11FF    1000 111111111
 	
+	DDRE = 0b10;
+	DDRA = 0xFF;
+	DDRC = 0b1111;
+	
 	//PORTA = 0b00000010; //Sending an adress.
 	PORTC = 0b00001000; //Sending an SRAM adress
+	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
+	
+	_delay_ms(1000);
+	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
+	_delay_ms(1000);
+	
+	//PORTA = 0b00000010; //Sending an adress.
+	PORTC = 0b00000010; //Sending an OLED adress
 	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
 	
 	_delay_ms(1000);
@@ -52,13 +64,7 @@ void exercise2 (void){
 	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
 	_delay_ms(1000);
 	
-	//PORTA = 0b00000010; //Sending an adress.
-	PORTC = 0b00000010; //Sending an OLED adress
-	PORTE = 0b10; //Sets ALE high. Tells the latch that there will now be an address to be saved.
-	
-	_delay_ms(1000);
-	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
-	_delay_ms(1000);
+
 }
 
 int main(void)
