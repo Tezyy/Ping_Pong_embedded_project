@@ -9,23 +9,26 @@
 #include <avr/sleep.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h> 
 
 #include "uart.h"
 #include "sram.h"
+#include "adc.h"
+#include "joystick.h"
 
 
 void exercise1 (void){
-		unsigned char mess = USART_Receive();
-		_delay_ms(1000);
-        USART_Transmit(mess);
-        printf("ouioui");
-        _delay_ms(1000);
+	unsigned char mess = USART_Receive();
+	_delay_ms(1000);
+	USART_Transmit(mess);
+	printf("ouioui");
+	_delay_ms(1000);
 }
 
 void exercise2 (void){
 	//Pour faire ce test we have to comment XMEM_init parce que en gros dans XMEM _init SRE overide toutes les directions de pin
 	//donc set les DDR manuellement c'est contradictoire avec set SRE, et le reste du temps SRE gère si les pins seront en entrée
-	//ou en sortie automatiquement 
+	//ou en sortie automatiquement
 	
 	//SRAM start:         0x1800    1100 000000000
 	//SRAM end:           0x1FFF    1111 111111111
@@ -67,19 +70,41 @@ void exercise2 (void){
 
 }
 
+void exercise3(){
+	 uint8_t adc_x_value = adc_read(0); //not sure about that -> AIN0 ? what's the real name of this PIN for the uC ? 0 for channel 0==> 1 ? 
+	 uint8_t adc_y_value = adc_read(1);
+
+	 JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value);
+	 JoystickDirection dir = getJoystickDirection(pos);
+	 
+	 // Print position and direction
+	 printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
+	 
+	 switch(dir) {
+		 case LEFT:   printf("Direction: LEFT\n");   break;
+		 case RIGHT:  printf("Direction: RIGHT\n");  break;
+		 case UP:     printf("Direction: UP\n");     break;
+		 case DOWN:   printf("Direction: DOWN\n");   break;
+		 default:     printf("Direction: NEUTRAL\n"); break;
+	 }
+}
+
+
 int main(void)
 {
 	
 	USART_Init(MYUBRR);
 	init_printf();
-	XMEM_init();
+	//XMEM_init();
 	//SRAM_test();
+	adc_init();
 	
 	while(1)
-    {
+	{
 		//exercise1();
 		//exercise2();
-    }
+		//exercise3();
+		
+	}
 	return(0);
 }
-
