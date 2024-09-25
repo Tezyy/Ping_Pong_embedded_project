@@ -34,6 +34,24 @@ void adc_init(){
 	 
 }
 
+
+uint8_t adc_read(uint8_t channel){
+	volatile char* ext_mem = (char *)0x1400; //base address for adc
+	ext_mem[0] = 0;
+
+	// wait for end of conversion
+	_delay_ms(9*NUMBER_OF_CHANNELS*2 / F_CPU); //do we have to put number_of_channels=4 somewhere ? I think so
+
+	// read desired channel
+	uint8_t data;
+
+	for (int i = 0; i <= channel; ++i) {
+		data = ext_mem[0];
+	}
+	
+	return data;
+}
+
 uint8_t adc_read(uint8_t channel); //volatile
 pos_calibrate();
 pos_t pos_read(void);
