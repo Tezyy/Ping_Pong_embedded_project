@@ -37,3 +37,13 @@ JoystickDirection getJoystickDirection(JoystickPosition pos) {
 		return NEUTRAL;
 	}
 }
+
+SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right) {
+	SliderPosition pos;
+
+	// Convert the ADC values to percentages
+	pos.left_percent = (uint8_t)(adc_left * 100) / (ADC_MAX);   // Range: 0 to 100% ???
+	pos.right_percent = (uint8_t)(adc_right * 100) / (ADC_MAX);
+
+	return pos;
+}
