@@ -26,4 +26,6 @@ JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y);
 
 JoystickDirection getJoystickDirection(JoystickPosition pos);
 
+SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right);
+
 #endif // JOYSTICK_H
