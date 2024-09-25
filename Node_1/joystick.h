@@ -20,9 +20,9 @@ typedef enum {
 #define ADC_MAX 255
 #define JOYSTICK_CENTER 128 
 
-#define THRESHOLD 50
+#define THRESHOLD 30
 
-JoystickPosition getJoystickPosition(uint16_t adc_x, uint16_t adc_y);
+JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y);
 
 JoystickDirection getJoystickDirection(JoystickPosition pos);
 
