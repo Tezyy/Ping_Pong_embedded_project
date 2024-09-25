@@ -73,9 +73,13 @@ void exercise2 (void){
 void exercise3(){
 	 uint8_t adc_x_value = adc_read(0); //not sure about that -> AIN0 ? what's the real name of this PIN for the uC ? 0 for channel 0==> 1 ? 
 	 uint8_t adc_y_value = adc_read(1);
+	 uint8_t adc_left_slider = adc_read(2);  // Assume channel 2 for left slider -> how to connect ? 
+	 uint8_t adc_right_slider = adc_read(3); // Assume channel 3 for right slider
 
 	 JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value);
 	 JoystickDirection dir = getJoystickDirection(pos);
+
+	SliderPosition sliders = getSliderPosition(adc_left_slider, adc_right_slider);
 	 
 	 // Print position and direction
 	 printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
@@ -87,6 +91,9 @@ void exercise3(){
 		 case DOWN:   printf("Direction: DOWN\n");   break;
 		 default:     printf("Direction: NEUTRAL\n"); break;
 	 }
+	// Print slider positions
+	  printf("Left Slider: %d%%\n", sliders.left_percent);
+	  printf("Right Slider: %d%%\n", sliders.right_percent);
 }
 
 
