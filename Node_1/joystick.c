@@ -1,36 +1,44 @@
 #include <stdint.h>
 
 #include "joystick.h"
+#include "adc.h"
 
-#define ADC_MIN 0
-#define ADC_MAX 255 //because 8 bits 
-#define JOYSTICK_CENTER 128 // Assuming 128 is the center value (255/2 = 127.5 in reality but idk if I can write this value)
+#define THRESHOLD 0
 
-JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y) { // uint16_t to have range from -100% to +100% ??
+JoystickCalibration calibrateJoystick() {
+	JoystickCalibration calib;
+
+	adc_data_t adc_inputs = adc_read();
+
+	calib.x_center = adc_inputs.joystick_x;
+	calib.y_center = adc_inputs.joystick_y;
+
+	return calib;
+}
+
+JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y, JoystickCalibration calib) { 
 	JoystickPosition pos;
 	
 	// Convert ADC value to percentage for X-axis
-	pos.x_percent = ((uint8_t)(adc_x - JOYSTICK_CENTER) * 100) / (JOYSTICK_CENTER);
+	pos.x_percent = ((int16_t)adc_x - calib.x_center) * 100 / 128;
 	
 	// Convert ADC value to percentage for Y-axis
-	pos.y_percent = ((uint8_t)(adc_y - JOYSTICK_CENTER) * 100) / (JOYSTICK_CENTER);
+	pos.y_percent = (((int16_t)adc_y - calib.y_center) * 100 / 128);
 	
 	return pos;
 }
-
-#define THRESHOLD 30  // Define a threshold for the joystick direction, typically around 10-20% of the full ADC range
 
 JoystickDirection getJoystickDirection(JoystickPosition pos) {
 	if (pos.x_percent > THRESHOLD) {
 		return RIGHT;
 	}
-	else if (pos.x_percent < -THRESHOLD) {
+	else if (pos.x_percent < THRESHOLD) {
 		return LEFT;
 	}
 	else if (pos.y_percent > THRESHOLD) {
 		return UP;
 	}
-	else if (pos.y_percent < -THRESHOLD) {
+	else if (pos.y_percent < THRESHOLD) {
 		return DOWN;
 	}
 	else {
@@ -42,8 +50,8 @@ SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right) {
 	SliderPosition pos;
 
 	// Convert the ADC values to percentages
-	pos.left_percent = (uint8_t)(adc_left * 100) / (ADC_MAX);   // Range: 0 to 100% ???
-	pos.right_percent = (uint8_t)(adc_right * 100) / (ADC_MAX);
+	pos.left_percent = (int16_t)(adc_left * 100) / 255;   // Range: 0 to 100%
+	pos.right_percent = (int16_t)(adc_right * 100) / 255;
 
 	return pos;
 }
