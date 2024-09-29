@@ -66,52 +66,78 @@ void exercise2 (void){
 	_delay_ms(1000);
 	PORTE = 0b00; //Sets ALE low. Now the address value is stored.
 	_delay_ms(1000);
-	
-
 }
 
 void exercise3(){
-	 uint8_t adc_x_value = adc_read(0); //not sure about that -> AIN0 ? what's the real name of this PIN for the uC ? 0 for channel 0==> 1 ? 
-	 uint8_t adc_y_value = adc_read(1);
-	 uint8_t adc_left_slider = adc_read(2);  // Assume channel 2 for left slider -> how to connect ? 
-	 uint8_t adc_right_slider = adc_read(3); // Assume channel 3 for right slider
+	//copier coller ça dans la main pour avoir des résultats !!!!
+	/*adc_data_t adc_inputs=adc_read();
+	uint8_t adc_x_value = adc_inputs.joystick_x;
+	uint8_t adc_y_value = adc_inputs.joystick_y;
+	uint8_t adc_left_slider = adc_inputs.slider_left;
+	uint8_t adc_right_slider = adc_inputs.slider_right;
 
-	 JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value);
-	 JoystickDirection dir = getJoystickDirection(pos);
+	JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value, calib);
+	JoystickDirection dir = getJoystickDirection(pos);
+	SliderPosition slider_pos = getSliderPosition(adc_left_slider, adc_right_slider);
+	
+	printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
+	printf("Slider Left: %d%%, Slider Right: %d%%\n", slider_pos.left_percent, slider_pos.right_percent);
+	
+	switch(dir) {
+		case LEFT:   printf("Direction: LEFT\n");   break;
+		case RIGHT:  printf("Direction: RIGHT\n");  break;
+		case UP:     printf("Direction: UP\n");     break;
+		case DOWN:   printf("Direction: DOWN\n");   break;
+		default:     printf("Direction: NEUTRAL\n"); break;*/
 
-	SliderPosition sliders = getSliderPosition(adc_left_slider, adc_right_slider);
-	 
-	 // Print position and direction
-	 printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
-	 
-	 switch(dir) {
-		 case LEFT:   printf("Direction: LEFT\n");   break;
-		 case RIGHT:  printf("Direction: RIGHT\n");  break;
-		 case UP:     printf("Direction: UP\n");     break;
-		 case DOWN:   printf("Direction: DOWN\n");   break;
-		 default:     printf("Direction: NEUTRAL\n"); break;
-	 }
-	// Print slider positions
-	  printf("Left Slider: %d%%\n", sliders.left_percent);
-	  printf("Right Slider: %d%%\n", sliders.right_percent);
 }
+void exo3_test(){
+	DDRE = 0b10;  // Configurer le registre E pour la sortie
+	DDRA = 0xFF;  // Configurer le port A pour la sortie
+	DDRC = 0b1111;  // Configurer les 4 bits de bas de PORTC pour la sortie
 
+	PORTC = 0b00000100;  // Envoyer une adresse ADC
+	PORTE = 0b10;  // Maintenir ALE haut pour indiquer que l'adresse est présente
+}
 
 int main(void)
 {
 	
 	USART_Init(MYUBRR);
 	init_printf();
-	//XMEM_init();
+	XMEM_init();
 	//SRAM_test();
 	adc_init();
-	
+	JoystickCalibration calib = calibrateJoystick();
+
 	while(1)
 	{
 		//exercise1();
 		//exercise2();
 		//exercise3();
+		adc_data_t adc_inputs=adc_read();
+		uint8_t adc_x_value = adc_inputs.joystick_x; 
+		uint8_t adc_y_value = adc_inputs.joystick_y; 
+		uint8_t adc_left_slider = adc_inputs.slider_left;
+		uint8_t adc_right_slider = adc_inputs.slider_right;
+
+		JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value, calib);
+		JoystickDirection dir = getJoystickDirection(pos);
+		SliderPosition slider_pos = getSliderPosition(adc_left_slider, adc_right_slider);
 		
+		printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
+		printf("Slider Left: %d%%, Slider Right: %d%%\n", slider_pos.left_percent, slider_pos.right_percent);
+		
+		switch(dir) {
+			case LEFT:   printf("Direction: LEFT\n");   break;
+			case RIGHT:  printf("Direction: RIGHT\n");  break;
+			case UP:     printf("Direction: UP\n");     break;
+			case DOWN:   printf("Direction: DOWN\n");   break;
+			default:     printf("Direction: NEUTRAL\n"); break;
+		
+		_delay_ms(1000);
+		}
+			
 	}
 	return(0);
 }

@@ -8,6 +8,7 @@
 #include <stdint.h> 
 
 #include "adc.h"
+#include "sram.h"
 
 void adc_init(){
 	DDRD |= (1 << DDD5); //set PD5 to output
@@ -32,22 +33,28 @@ void adc_init(){
 	OCR1AL=0x1;
 	
 	DDRD &= ~(1<<DDD4); //set PD4 to input
+	
+	//DDRD = (1<<DDD7); // ??
 	 
 }
 
-uint8_t adc_read(uint8_t channel){
-	volatile char* ext_mem = (char *)0x1400; //base address for adc
-	ext_mem[0] = 0;
+adc_data_t adc_read()
+{
+	volatile char *adc_start_address = (char *) 0x1400; //0x1400 is the first adress in the adress space.
+	adc_data_t adc_inputs;
 
-	// wait for end of conversion
-	_delay_ms(9*NUMBER_OF_CHANNELS*2 / F_CPU);
+	adc_start_address[0] = 0x00; //Write any value just to send write signal to ADC.
 
-	// read desired channel
-	uint8_t data;
-
-	for (int i = 0; i <= channel; ++i) {
-		data = ext_mem[0];
-	}
+	//For read and write, the adress does not matter as long as it is within the ADC adress space
+	//The order of reads matters here, as the ADC inputs are stored in the ADC's RAM in a certain order (Pin 0 -> Pin 3).
+	//Reading "pops" values from the RAM in FIFO order.
+	adc_inputs.joystick_x = adc_start_address[0]; //canal 0
+	adc_inputs.joystick_y = adc_start_address[0]; //canal 1
+	adc_inputs.slider_left=adc_start_address[0]; //canal 2
+	adc_inputs.slider_right=adc_start_address[0]; //canal 3 
 	
-	return data;
+	return adc_inputs;
+
+	//printf("\r");
+	//printf("x : %8d | y: %8d ", adc_inputs.joystick_x, adc_inputs.joystick_y);
 }
