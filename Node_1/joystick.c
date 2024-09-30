@@ -29,16 +29,16 @@ JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y, JoystickCalib
 }
 
 JoystickDirection getJoystickDirection(JoystickPosition pos) {
-	if (pos.x_percent > THRESHOLD) {
+	if (pos.x_percent > THRESHOLD+15) {
 		return RIGHT;
 	}
-	else if (pos.x_percent < THRESHOLD) {
+	else if (pos.x_percent < THRESHOLD-15) {
 		return LEFT;
 	}
-	else if (pos.y_percent > THRESHOLD) {
+	else if (pos.y_percent > THRESHOLD+15) {
 		return UP;
 	}
-	else if (pos.y_percent < THRESHOLD) {
+	else if (pos.y_percent < THRESHOLD-15) {
 		return DOWN;
 	}
 	else {
@@ -55,3 +55,4 @@ SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right) {
 
 	return pos;
 }
+
