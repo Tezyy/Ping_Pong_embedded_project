@@ -27,8 +27,8 @@ void oled_home();
 // set selected line
 void oled_line(uint8_t line);
 
-// set slected column
-void oled_column(uint8_t column);
+// set selected column
+void oled_go_to_column(uint8_t column);
 
 // clear the specified line
 // by writing 0 to all 128 columns
@@ -38,12 +38,13 @@ void oled_clear_line(uint8_t line);
 void oled_clear();
 
 // Set selected position
-// Move the cursor to the specified 
+// Move the cursor to the specified
 // columns and lines
 void oled_set_pos(uint8_t row, uint8_t column);
 
 // send character
-void oled_print_char (char *data);
+void oled_print_char (char c);
 
+void oled_print_string(char* strg);
 
 #endif
