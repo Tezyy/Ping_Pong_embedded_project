@@ -27,10 +27,6 @@ void oled_init()
     oled_command_write(0xa4); //out follows RAM content 
     oled_command_write(0xa6); //set normal display 
     oled_command_write(0xaf); // display on
-    
-    // Page addressing mode:
-    oled_command_write(0x20);
-    oled_command_write(0b10);
 
     oled_clear(); // clear the screen 
     // May set the cursor in (0;0) ??
