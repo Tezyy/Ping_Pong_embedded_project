@@ -56,7 +56,10 @@ void oled_data_write(uint8_t data){
 
 // reset oled screen and re_initializes it
 void oled_reset(){
-    
+	for (int line = 0; line < 8; line++) {
+		oled_clear_line(line);
+	}
+	oled_home();
 }
 
 // set to (o;o)
