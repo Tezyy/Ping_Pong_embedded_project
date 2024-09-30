@@ -27,6 +27,10 @@ void oled_init()
     oled_command_write(0xa4); //out follows RAM content 
     oled_command_write(0xa6); //set normal display 
     oled_command_write(0xaf); // display on
+    
+    // Page addressing mode:
+  //  oled_command_write(0x20);
+  //  oled_command_write(0b10);
 
     oled_clear(); // clear the screen 
     // May set the cursor in (0;0) ??
@@ -39,19 +43,20 @@ void oled_init()
 // Send command to the Oled
 //Same way like for the ram
 void oled_command_write(uint8_t command){
-    volatile char* cmd_prt = (char*)0x1000;
-    cmd_prt[0]=command ; 
+    volatile char* cmd_prt = (char*)OLED_COMMAND_ADDRESS;
+    cmd_prt[0]=command ;
 }
 
 // Send data to the Oled
 void oled_data_write(uint8_t data){
-    volatile char* data_prt = (char*)0x1000
-    data_prt[0]=command ;
+    volatile char* data_prt = (char*)OLED_DATA_ADDRESS;
+    data_prt[0]=data;
 }
 
 
 // reset oled screen and re_initializes it
-void oled_reset(){
+// VOIR 7.5 ??
+void oled_reset(){ 
 	for (int line = 0; line < 8; line++) {
 		oled_clear_line(line);
 	}
@@ -70,7 +75,7 @@ void oled_line(uint8_t line){
 
 // set slected column
 void oled_column(uint8_t column){
-    oled_command_write(0x00 + (column % 16)); 
+    oled_command_write(0x00 + (column % 16)); // <<4 the same ?
     oled_command_write(0x10 + (column / 16)); 
 }
 
@@ -78,7 +83,7 @@ void oled_column(uint8_t column){
 // by writing 0 to all 128 columns
 void oled_clear_line(uint8_t line){
     for (uint8_t i =0;i<128;i++){
-        oled_data_write(0b00);  //A FINIR
+        oled_data_write(0b00000000);  //A FINIR
     }
 }
 
@@ -88,7 +93,7 @@ void oled_clear(){
 		oled_line(line);
 		oled_column(0);
 		for (int i = 0; i < 128; i++) {
-			oled_data_write(0x00);
+			oled_data_write(0b00000000);
 	}
 }
 }
