@@ -15,6 +15,7 @@
 #include "sram.h"
 #include "adc.h"
 #include "joystick.h"
+#include "oled.h"
 
 
 void exercise1 (void){
@@ -91,13 +92,11 @@ void exercise3(){
 		default:     printf("Direction: NEUTRAL\n"); break;*/
 
 }
-void exo3_test(){
-	DDRE = 0b10;  // Configurer le registre E pour la sortie
-	DDRA = 0xFF;  // Configurer le port A pour la sortie
-	DDRC = 0b1111;  // Configurer les 4 bits de bas de PORTC pour la sortie
 
-	PORTC = 0b00000100;  // Envoyer une adresse ADC
-	PORTE = 0b10;  // Maintenir ALE haut pour indiquer que l'adresse est présente
+void exercise4(){
+	oled_set_pos(0,0);
+	//oled_print_char('h');
+	oled_print_string("bonjour alix");
 }
 
 int main(void)
@@ -109,36 +108,15 @@ int main(void)
 	//SRAM_test();
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
+	oled_init();
+	_delay_ms(2000);
+	exercise4();
 
 	while(1)
 	{
-		//exercise1();
-		//exercise2();
-		//exercise3();
-		adc_data_t adc_inputs=adc_read();
-		uint8_t adc_x_value = adc_inputs.joystick_x; 
-		uint8_t adc_y_value = adc_inputs.joystick_y; 
-		uint8_t adc_left_slider = adc_inputs.slider_left;
-		uint8_t adc_right_slider = adc_inputs.slider_right;
-		//printf("slider left real : %d\n", adc_left_slider);
-		//printf("slider right real : %d\n", adc_right_slider);
-
-		JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value, calib);
-		JoystickDirection dir = getJoystickDirection(pos);
-		SliderPosition slider_pos = getSliderPosition(adc_left_slider, adc_right_slider);
-		
-		printf("Joystick X: %d%%, Y: %d%%\n", pos.x_percent, pos.y_percent);
-		printf("Slider Left: %d%%, Slider Right: %d%%\n", slider_pos.left_percent, slider_pos.right_percent);
-		
-		switch(dir) {
-			case LEFT:   printf("Direction: LEFT\n");   break;
-			case RIGHT:  printf("Direction: RIGHT\n");  break;
-			case UP:     printf("Direction: UP\n");     break;
-			case DOWN:   printf("Direction: DOWN\n");   break;
-			default:     printf("Direction: NEUTRAL\n"); break;
-				
-		}
-		_delay_ms(1000);
+		//exercise4();	
+		_delay_ms(2000);
 	}
 	return(0);
 }
+
