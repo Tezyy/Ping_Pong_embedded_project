@@ -120,6 +120,8 @@ int main(void)
 		uint8_t adc_y_value = adc_inputs.joystick_y; 
 		uint8_t adc_left_slider = adc_inputs.slider_left;
 		uint8_t adc_right_slider = adc_inputs.slider_right;
+		//printf("slider left real : %d\n", adc_left_slider);
+		//printf("slider right real : %d\n", adc_right_slider);
 
 		JoystickPosition pos = getJoystickPosition(adc_x_value, adc_y_value, calib);
 		JoystickDirection dir = getJoystickDirection(pos);
@@ -134,10 +136,9 @@ int main(void)
 			case UP:     printf("Direction: UP\n");     break;
 			case DOWN:   printf("Direction: DOWN\n");   break;
 			default:     printf("Direction: NEUTRAL\n"); break;
-		
-		_delay_ms(1000);
+				
 		}
-			
+		_delay_ms(1000);
 	}
 	return(0);
 }
