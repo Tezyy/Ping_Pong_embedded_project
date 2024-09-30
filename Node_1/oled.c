@@ -27,23 +27,32 @@ void oled_init()
     oled_command_write(0xa4); //out follows RAM content 
     oled_command_write(0xa6); //set normal display 
     oled_command_write(0xaf); // display on
+    
+    // Page addressing mode:
+    oled_command_write(0x20);
+    oled_command_write(0b10);
 
     oled_clear(); // clear the screen 
     // May set the cursor in (0;0) ??
 }
 
+/*To display something on the OLED :
+1)send a command to tell where on the OLED to write
+2)send 8 bits to the OLED.*/
+
 // Send command to the Oled
 //Same way like for the ram
 void oled_command_write(uint8_t command){
-    volatile char* cmd_prt = (char*)OLED_COMMAND_ADDRESS;
+    volatile char* cmd_prt = (char*)0x1000;
     cmd_prt[0]=command ; 
 }
 
 // Send data to the Oled
 void oled_data_write(uint8_t data){
-    volatile char* data_prt = (char*)OLED_DATA_ADDRESS;
+    volatile char* data_prt = (char*)0x1000
     data_prt[0]=command ;
 }
+
 
 // reset oled screen and re_initializes it
 void oled_reset(){
@@ -62,7 +71,8 @@ void oled_line(uint8_t line){
 
 // set slected column
 void oled_column(uint8_t column){
-    NULL;
+    oled_command_write(0x00 + (column % 16)); 
+    oled_command_write(0x10 + (column / 16)); 
 }
 
 // clear the specified line
@@ -75,7 +85,12 @@ void oled_clear_line(uint8_t line){
 
 // clear all the screen
 void oled_clear(){
-    NULL;
+    for (int line = 0; line < 8; line++) {
+        oled_line(line);
+        oled_column(0);
+    for (int i = 0; i < 128; i++) {
+        oled_data_write(0x00);
+  }
 }
 
 // Set selected position
