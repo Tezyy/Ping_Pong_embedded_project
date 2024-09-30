@@ -85,11 +85,11 @@ void oled_clear_line(uint8_t line){
 
 // clear all the screen
 void oled_clear(){
-    for (int line = 0; line < 8; line++) {
-	    oled_goto_line(line);
-	    oled_goto_column(0);
-	    for (int i = 0; i < 128; i++) {
-		    oled_write_data(0x00);
+	for (int line = 0; line < 8; line++) {
+		oled_goto_line(line);
+		oled_goto_column(0);
+		for (int i = 0; i < 128; i++) {
+			oled_write_data(0x00);
 	}
 }
 }
