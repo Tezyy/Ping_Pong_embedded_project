@@ -86,11 +86,12 @@ void oled_clear_line(uint8_t line){
 // clear all the screen
 void oled_clear(){
     for (int line = 0; line < 8; line++) {
-        oled_line(line);
-        oled_column(0);
-    for (int i = 0; i < 128; i++) {
-        oled_data_write(0x00);
-  }
+	    oled_goto_line(line);
+	    oled_goto_column(0);
+	    for (int i = 0; i < 128; i++) {
+		    oled_write_data(0x00);
+	}
+}
 }
 
 // Set selected position
