@@ -107,13 +107,7 @@ void exercise4_test(){
 }
 
 void exercise4_menu(){
-	/*JoystickPosition pos;
-	JoystickDirection direction;
-	
-	adc_data_t adc_inputs = adc_read();
-	pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
-	direction = getJoystickDirection(pos);
-	
+	/*	
 	choix_menu(current_selection);
 	
 	if (direction == UP && current_selection > 0) {
@@ -126,13 +120,6 @@ void exercise4_menu(){
 	print_menu();
 	choix_menu(current_selection);
 	}*/
-}
-
-void test_button(){
-	Buttons state = buttons_read();
-	if (state.button_left){
-		printf("hello");
-	}
 }
 
 int main(void)
@@ -151,18 +138,16 @@ int main(void)
 
 	while(1)
 	{
-		//exercise4_menu();	
+		//laisser ça constamment
 		JoystickPosition pos;
 		JoystickDirection direction;
 		
 		adc_data_t adc_inputs = adc_read();
 		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
 		direction = getJoystickDirection(pos);
+		Buttons state = buttons_read();
 		
-		//test_button();
-		
-		/*choix_menu(current_selection);
-		
+		// maintenant c'est bon on peu faire nos tests et modifs
 		if (direction == UP && current_selection > 0) {
 			current_selection--;
 			print_menu();
@@ -173,8 +158,18 @@ int main(void)
 			print_menu();
 			choix_menu(current_selection);
 		}
+		if (state.button_left) {
+			oled_clear();
+			oled_set_pos(0,0);
+			switch(current_selection){
+				case 0 : oled_print_string("Choix : 1"); break;
+				case 1 : oled_print_string("Choix : 2"); break;
+				case 2 : oled_print_string("Choix : 3"); break;
+				case 3 : oled_print_string("Choix : 4"); break;
+			}
+		}
 
-		_delay_ms(200);*/
+		_delay_ms(200);
 		}
 		
 	return(0);
