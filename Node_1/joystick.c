@@ -55,4 +55,3 @@ SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right) {
 
 	return pos;
 }
-
