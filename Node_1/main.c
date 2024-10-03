@@ -16,6 +16,7 @@
 #include "adc.h"
 #include "joystick.h"
 #include "oled.h"
+#include "menu.h"
 
 
 void exercise1 (void){
@@ -90,18 +91,45 @@ void exercise3(){
 		case UP:     printf("Direction: UP\n");     break;
 		case DOWN:   printf("Direction: DOWN\n");   break;
 		default:     printf("Direction: NEUTRAL\n"); break;*/
-
 }
 
 void exercise4(){
-	oled_set_pos(0,0);
+	oled_set_pos(1,110);
+	fleche();
+	_delay_ms(1000);
+	//if blablabla entre les 2 pour selection du menu
+	oled_clear();
+	oled_set_pos(3,110);
+	fleche();
+	_delay_ms(500);
 	//oled_print_char('h');
-	oled_print_string("bonjour alix");
+	//oled_print_string("bonjour");
+}
+
+void exercise4_menu(){
+	/*JoystickPosition pos;
+	JoystickDirection direction;
+	
+	adc_data_t adc_inputs = adc_read();
+	pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
+	direction = getJoystickDirection(pos);
+	
+	choix_menu(current_selection);
+	
+	if (direction == UP && current_selection > 0) {
+	current_selection--;
+	print_menu();
+	choix_menu(current_selection);
+	}
+	else if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
+	current_selection++;
+	print_menu();
+	choix_menu(current_selection);
+	}*/
 }
 
 int main(void)
 {
-	
 	USART_Init(MYUBRR);
 	init_printf();
 	XMEM_init();
@@ -109,14 +137,36 @@ int main(void)
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
 	oled_init();
-	_delay_ms(2000);
-	exercise4();
+	_delay_ms(1000);
+	print_menu();
+	uint8_t current_selection=0;
+	
 
 	while(1)
 	{
-		//exercise4();	
-		_delay_ms(2000);
-	}
+		//exercise4_menu();	
+		JoystickPosition pos;
+		JoystickDirection direction;
+		
+		adc_data_t adc_inputs = adc_read();
+		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
+		direction = getJoystickDirection(pos);
+		
+		choix_menu(current_selection);
+		
+		if (direction == UP && current_selection > 0) {
+			current_selection--;
+			print_menu();
+			choix_menu(current_selection); 
+			} 
+		else if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
+			current_selection++; 
+			print_menu();
+			choix_menu(current_selection);
+		}
+
+		_delay_ms(200);
+		}
+		
 	return(0);
 }
-
