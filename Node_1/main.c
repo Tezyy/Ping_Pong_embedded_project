@@ -93,7 +93,7 @@ void exercise3(){
 		default:     printf("Direction: NEUTRAL\n"); break;*/
 }
 
-void exercise4(){
+void exercise4_test(){
 	oled_set_pos(1,110);
 	fleche();
 	_delay_ms(1000);
@@ -128,6 +128,13 @@ void exercise4_menu(){
 	}*/
 }
 
+void test_button(){
+	Buttons state = buttons_read();
+	if (state.button_left){
+		printf("hello");
+	}
+}
+
 int main(void)
 {
 	USART_Init(MYUBRR);
@@ -140,7 +147,7 @@ int main(void)
 	_delay_ms(1000);
 	print_menu();
 	uint8_t current_selection=0;
-	
+	DDRB = 0b11; //left and right button on the atmega	
 
 	while(1)
 	{
@@ -152,20 +159,22 @@ int main(void)
 		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
 		direction = getJoystickDirection(pos);
 		
-		choix_menu(current_selection);
+		//test_button();
+		
+		/*choix_menu(current_selection);
 		
 		if (direction == UP && current_selection > 0) {
 			current_selection--;
 			print_menu();
 			choix_menu(current_selection); 
 			} 
-		else if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
+		if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
 			current_selection++; 
 			print_menu();
 			choix_menu(current_selection);
 		}
 
-		_delay_ms(200);
+		_delay_ms(200);*/
 		}
 		
 	return(0);
