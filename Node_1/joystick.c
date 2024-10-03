@@ -1,3 +1,7 @@
+#include <avr/io.h>
+#include <avr/sleep.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 
 #include "joystick.h"
@@ -54,4 +58,11 @@ SliderPosition getSliderPosition(uint8_t adc_left, uint8_t adc_right) {
 	pos.right_percent = (int16_t)(adc_right * 100) / 255;
 
 	return pos;
+}
+
+Buttons buttons_read(){
+	Buttons buttons;
+	buttons.button_right = ((PINB & (1<<PB0)) != 0);
+	buttons.button_left = ((PINB & (1<<PB1)) != 0);
+	return buttons;
 }
