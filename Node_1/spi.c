@@ -7,4 +7,10 @@ void init_spi(){
   PORTB |= (1 << PB4); // active SS
 }
 
+void spi_write(char data){
+  SPDR=data;
+  while(!(SPSR & (1<<SPIF)));
+}
+
+
 
