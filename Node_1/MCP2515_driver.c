@@ -8,7 +8,7 @@ uint8_t read(uint8_t adress){
 
     spi_receive(MCP_READ);
     spi_receive(adress);
-    char result = spi_receive();
+    uint8_t result = spi_receive();
 
     set_bit(PORTB, PB4);
 
@@ -24,8 +24,6 @@ void write(uint8_t adress, uint8_t data ){
     spi_receive(data);
 
     set_bit(PORTB, PB4);
-
-    return result;
 };
 
 void req_to_send(uint8_t stat){
