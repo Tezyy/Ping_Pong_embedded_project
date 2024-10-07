@@ -9,7 +9,7 @@
 void init_spi(){
 	DDRB |= (1<<PB5) | (1<<PB7) | (1<<PB4); //MOSI(PB5) SCK(PB7) SS(PB4) output
 	DDRB &= ~(1 << PB6); // MISO (PB6) input
-	SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0); // enable SPI, set SPI mode 0, set SCK rate to F_CPU/ 16
+	SPCR |= (1 << SPE) | (1 << MSTR) | (1 << SPR0); // enable SPI, set SPI mode 0, set SCK rate to F_CPU/ 16
 	PORTB |= (1 << PB4); // Set SS high (deselect slave)
 }
 
@@ -23,7 +23,7 @@ uint8_t spi_receive(){
 	while (!(SPSR & (1 << SPIF)));
 	return SPDR;
 }
-// est ce qu'on a vraiment besoin des fonctions qui suivent ? Ca suffirait pas juste de mettre le slave dans l'init et basta ? Jpense que ce serait plus simple mais idk, j'attends vos avis
+/*// est ce qu'on a vraiment besoin des fonctions qui suivent ? Ca suffirait pas juste de mettre le slave dans l'init et basta ? Jpense que ce serait plus simple mais idk, j'attends vos avis
 void spi_select_slave(void) {
 	PORTB &= ~(1 << PB4); // Pull SS low to select the slave
 }
@@ -31,3 +31,4 @@ void spi_select_slave(void) {
 void spi_deselect_slave(void) {
 	PORTB |= (1 << PB4); // Set SS high to deselect the slave
 }
+*/
