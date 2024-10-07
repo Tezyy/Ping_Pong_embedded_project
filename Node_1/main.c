@@ -17,6 +17,7 @@
 #include "joystick.h"
 #include "oled.h"
 #include "menu.h"
+#include "spi.h"
 
 
 void exercise1 (void){
@@ -108,8 +109,6 @@ void exercise4_test(){
 
 void exercise4_menu(){
 	/*	
-	choix_menu(current_selection);
-	
 	if (direction == UP && current_selection > 0) {
 	current_selection--;
 	print_menu();
@@ -119,6 +118,17 @@ void exercise4_menu(){
 	current_selection++;
 	print_menu();
 	choix_menu(current_selection);
+	}
+	
+	if (state.button_left) {
+		oled_clear();
+		oled_set_pos(0,0);
+		switch(current_selection){
+			case 0 : oled_print_string("Choix : 1"); break;
+			case 1 : oled_print_string("Choix : 2"); break;
+			case 2 : oled_print_string("Choix : 3"); break;
+			case 3 : oled_print_string("Choix : 4"); break;
+		}
 	}*/
 }
 
@@ -131,10 +141,12 @@ int main(void)
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
 	oled_init();
-	_delay_ms(1000);
+	init_spi();	
+	
 	print_menu();
 	uint8_t current_selection=0;
-	DDRB = 0b11; //left and right button on the atmega	
+	DDRB = 0b11; //left and right button on the atmega	//voir si on veut garder ça comme ça ou l'intégrer plus proprement dans le .c correspondant
+	
 
 	while(1)
 	{
@@ -147,29 +159,16 @@ int main(void)
 		direction = getJoystickDirection(pos);
 		Buttons state = buttons_read();
 		
-		// maintenant c'est bon on peu faire nos tests et modifs
-		if (direction == UP && current_selection > 0) {
-			current_selection--;
-			print_menu();
-			choix_menu(current_selection); 
-			} 
-		if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
-			current_selection++; 
-			print_menu();
-			choix_menu(current_selection);
-		}
-		if (state.button_left) {
-			oled_clear();
-			oled_set_pos(0,0);
-			switch(current_selection){
-				case 0 : oled_print_string("Choix : 1"); break;
-				case 1 : oled_print_string("Choix : 2"); break;
-				case 2 : oled_print_string("Choix : 3"); break;
-				case 3 : oled_print_string("Choix : 4"); break;
-			}
-		}
-
+		// maintenant c'est bon on peut faire nos tests et modifs
+		spi_select_slave();
+		spi_transmit(0xAA);
+		uint8_t received_data=spi_receive();
+		spi_deselect_slave();
+		
+		printf("data received by the spi : 0x%02X\n", received_data);
+		
 		_delay_ms(200);
+		
 		}
 		
 	return(0);
