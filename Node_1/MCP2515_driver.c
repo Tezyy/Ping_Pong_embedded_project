@@ -7,7 +7,7 @@ uint8_t read(uint8_t adress){
     clear_bit(PORTB, PB4);
 
     spi_receive(MCP_READ);
-    spi_receive(address);
+    spi_receive(adress);
     char result = spi_receive();
 
     set_bit(PORTB, PB4);
@@ -20,7 +20,7 @@ void write(uint8_t adress, uint8_t data ){
     clear_bit(PORTB, PB4);
 
     spi_receive(MCP_WRITE);
-    spi_receive(address);
+    spi_receive(adress);
     spi_receive(data);
 
     set_bit(PORTB, PB4);
