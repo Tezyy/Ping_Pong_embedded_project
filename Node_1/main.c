@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <stdint.h> 
 
+#include "bit_macros.h"
 #include "uart.h"
 #include "sram.h"
 #include "adc.h"
@@ -18,6 +19,9 @@
 #include "oled.h"
 #include "menu.h"
 #include "spi.h"
+#include "MCP2515.h"
+#include "MCP2515_driver.h"
+#include "frenchCANcan.h"
 
 
 void exercise1 (void){
@@ -132,21 +136,48 @@ void exercise4_menu(){
 	}*/
 }
 
+void exercise5(){
+	// to send things on the mcp2515
+	uint8_t data_send = 0xD7; //for example
+	mcp2515_write(0x31, data_send);
+	uint8_t result = mcp2515_read(0x31);
+	
+	printf("result = 0x%02X\n", result);
+}
+
+void exercise5_b(){
+	message_t message = {
+		1, //adress
+		6, //longueur
+		"heiiii" //message
+	};
+	can_send(&message);
+
+	message_t receive = can_receive();
+	printf("Heisann sveisann, vi har fått ei melding.\r\n");
+	printf("Id: %d \r\n", receive.id);
+	printf("Lengde: %d \r\n", receive.length);
+	printf("Melding: %s \r\n\r\n", receive.data);
+}
+
 int main(void)
 {
 	USART_Init(MYUBRR);
-	init_printf();
+	init_printf();	
 	XMEM_init();
 	//SRAM_test();
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
 	oled_init();
 	init_spi();	
+	mcp2515_init();
 	
 	print_menu();
 	uint8_t current_selection=0;
-	DDRB = 0b11; //left and right button on the atmega	//voir si on veut garder ça comme ça ou l'intégrer plus proprement dans le .c correspondant
 	
+	mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);
+	
+	exercise5_b();	
 
 	while(1)
 	{
@@ -155,21 +186,39 @@ int main(void)
 		JoystickDirection direction;
 		
 		adc_data_t adc_inputs = adc_read();
-		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
+ 		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
 		direction = getJoystickDirection(pos);
+
 		Buttons state = buttons_read();
 		
-		// maintenant c'est bon on peut faire nos tests et modifs
-		spi_select_slave();
-		spi_transmit(0xAA);
-		uint8_t received_data=spi_receive();
-		spi_deselect_slave();
-		
-		printf("data received by the spi : 0x%02X\n", received_data);
-		
-		_delay_ms(200);
-		
+		if (direction == UP && current_selection > 0) {
+			current_selection--;
+			print_menu();
+			choix_menu(current_selection);
+		}
+		else if (direction == DOWN && current_selection < NUM_OPTIONS-1) {
+			current_selection++;
+			print_menu();
+			choix_menu(current_selection);
 		}
 		
+		if (state.button_left) {
+			oled_clear();
+			oled_set_pos(0,0);
+			switch(current_selection){
+				case 0 : oled_print_string("Choice : 1"); break;
+				case 1 : oled_print_string("Choice : 2"); break;
+				case 2 : oled_print_string("Choice : 3"); break;
+				case 3 : oled_print_string("Choice : 4"); break;
+			}
+		}
+		
+		// maintenant c'est bon on peut faire nos tests et modifs
+
+		
+		_delay_ms(1000);
+
+	}
+			
 	return(0);
 }
