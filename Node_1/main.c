@@ -147,17 +147,16 @@ void exercise5(){
 
 void exercise5_b(){
 	message_t message = {
-		1, //adress
-		6, //longueur
-		"heiiii" //message
+		1, // Id
+		5, // Length
+		"hello" // Data
 	};
-	can_send(&message);
+	CAN_send(&message); 
 
-	message_t receive = can_receive();
-	printf("Heisann sveisann, vi har fått ei melding.\r\n");
+	message_t receive = CAN_receive();
 	printf("Id: %d \r\n", receive.id);
-	printf("Lengde: %d \r\n", receive.length);
-	printf("Melding: %s \r\n\r\n", receive.data);
+	printf("Length: %d \r\n", receive.length);
+	printf("data: %s \r\n\r\n", receive.data);
 }
 
 int main(void)
@@ -184,7 +183,7 @@ int main(void)
 		//laisser ça constamment
 		JoystickPosition pos;
 		JoystickDirection direction;
-		
+				
 		adc_data_t adc_inputs = adc_read();
  		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
 		direction = getJoystickDirection(pos);
@@ -216,7 +215,7 @@ int main(void)
 		// maintenant c'est bon on peut faire nos tests et modifs
 
 		
-		_delay_ms(1000);
+		_delay_ms(200);
 
 	}
 			
