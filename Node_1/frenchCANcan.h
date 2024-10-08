@@ -33,13 +33,15 @@
 #define MCP_RXB0DLC 0x65
 #define MCP_RXB0D0 0x66
 
+// CAN message structure
 typedef struct Message {
 	unsigned int id;
 	uint8_t length;
 	char data[8];
-} message_t, *message_ptr;
+} message_t;
 
-void can_send(message_ptr message);
-message_t can_receive();
+uint8_t CAN_init(void);
+void CAN_send(message_t *msg);
+message_t CAN_receive();
 
 #endif /* FRENCHCANCAN_H_ */
