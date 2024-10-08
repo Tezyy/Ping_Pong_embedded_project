@@ -2,7 +2,8 @@
 #include "spi.h"
 #include "bit_macros.h"
 
-
+#define F_CPU 4915200UL
+#include <util/delay.h>
 #include <avr/io.h>
 #include <avr/sleep.h>
 #include <stdio.h>
@@ -64,14 +65,13 @@ void mcp2515_reset(){
 
 uint8_t mcp2515_init ()
 {
-	uint8_t value ;
 	init_spi() ; // Initialize SPI
 	mcp2515_reset () ; // Send reset - command
+	_delay_ms(1);
 	// Self - test
-	mcp2515_write( MCP_CANSTAT , & value );
+	uint8_t value = mcp2515_read( MCP_CANSTAT);
 	if (( value & MODE_MASK ) != MODE_CONFIG ) {
 		printf (" MCP2515 is NOT in configuration mode after reset !\n");
-		return 1;
 	}
 	// More initialization
 	return 0;
