@@ -13,6 +13,7 @@
 
 int main(void)
 {
+	uart_init(84000000, 9600);
 
   while(1)
 	{
