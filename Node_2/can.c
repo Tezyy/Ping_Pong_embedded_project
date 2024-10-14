@@ -1,6 +1,6 @@
 //Code taken from Blackboard
 
-#include "sam.h"
+#include <sam.h>
 #include "can.h"
 #include <stdio.h>
 
