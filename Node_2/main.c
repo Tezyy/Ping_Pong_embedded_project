@@ -6,6 +6,7 @@
 
 #include <sam.h>
 
+#include "servo.h"
 #include "uart.h"
 
 
