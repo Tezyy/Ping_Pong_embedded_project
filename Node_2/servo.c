@@ -18,3 +18,16 @@ void configure_pwm_channel1(void) {
     // Enable the PWM channel
     PWM->PWM_ENA = PWM_ENA_CHID1;  // Enable PWM channel 1
 }
+
+/*
+Clock Setup: The PMC_PCER1 enables the PWM clock, and PMC_PCER0 enables the peripheral clock for PIOB, which includes pin PB13.
+Pin Configuration: PIO_PDR and PIO_ABSR configure PB13 to use the peripheral B function (PWM output).
+PWM Configuration:
+- PWM_CMR: Sets the clock prescaler to divide the master clock by 1024.
+- PWM_CPRD: Defines the period of the PWM signal (8192 ticks for 20 ms).
+- PWM_CDTY: Sets the duty cycle (409 ticks for 0.9 ms).
+- PWM Enable: PWM_ENA enables the PWM channel 1.
+
+We can modify the duty cycle in the loop to control the servo position,
+adjusting the value in PWM_CDTY between 0.9 ms (409) and 2.1 ms (1720) for full-range motion.
+*/
