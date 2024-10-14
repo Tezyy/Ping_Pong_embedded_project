@@ -48,7 +48,11 @@ void uart_init(uint32_t cpufreq, uint32_t baudrate){
     // Configure UART settings
     UART->UART_CR   |= UART_CR_TXEN | UART_CR_RXEN;
     UART->UART_MR   |= UART_MR_PAR_NO;
-    UART->UART_BRGR = cpufreq / 16 / baudrate;
+    //UART->UART_BRGR = cpufreq / 16 / baudrate;
+    UART->UART_BRGR = cpufreq / (16 * baudrate); //Appeler uart_init(84000000, 9600);  // 84 MHz clock, 9600 baud rate dans le main
+
+
+
     
     
     // Configure interrupts on receive ready and errors
