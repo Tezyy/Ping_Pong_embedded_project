@@ -1,3 +1,4 @@
+#incldue "servo.h"
 #include <sam.h>
 
 // Function to configure the PWM
