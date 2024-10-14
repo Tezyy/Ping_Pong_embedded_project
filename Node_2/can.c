@@ -42,6 +42,11 @@ void can_init(CanInit init, uint8_t rxInterrupt){
     // Enable Clock for CAN0 in PMC
     // DIV = 1 (can clk = MCK/2), CMD = 1 (write), PID = 2B (CAN0)
     PMC->PMC_PCR = PMC_PCR_EN | (0/*??*/ << PMC_PCR_DIV_Pos) | PMC_PCR_CMD | (ID_CAN0 << PMC_PCR_PID_Pos); //ICI à changer
+    /*
+    INIT: You must find a fitting value for CAN_BR. Search in datasheet (40.9.6
+    and 40.7.4 w/Example at end). This must correspond to the value you set in
+    the CNFx registers on MCP2515. Keyword: Time Quantum
+    */
     PMC->PMC_PCER1 |= 1 << (ID_CAN0 - 32);
     
     //Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
