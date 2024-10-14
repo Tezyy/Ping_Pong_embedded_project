@@ -16,8 +16,8 @@
 
 int main(void)
 {
-    	SystemInit(); // Initialize the system
-        configure_pwm_channel1(); // Configure PWM on channel 1
+	SystemInit(); // Initialize the system
+	configure_pwm_channel1(); // Configure PWM on channel 1
 
 	uart_init(84000000, 9600);
 	
