@@ -1,3 +1,5 @@
+//Code taken from Blackboard
+
 #include "sam.h"
 #include <stdio.h>
 
