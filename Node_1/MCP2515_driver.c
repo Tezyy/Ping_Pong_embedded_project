@@ -1,4 +1,5 @@
 #include "MCP2515.h"
+#include "MCP2515_driver.h"
 #include "spi.h"
 #include "bit_macros.h"
 
@@ -73,6 +74,17 @@ uint8_t mcp2515_init ()
 	if (( value & MODE_MASK ) != MODE_CONFIG ) {
 		printf (" MCP2515 is NOT in configuration mode after reset !\n");
 	}
-	// More initialization
+	// ce qui vient après là, c'est pour le node 2, je suis pas certaine à 10 000% attention mais mes calculs ont donné ça
+	// CNF1: Configure Baud Rate Prescaler (BRP) and SJW (Synchronization Jump Width)
+    MCP2515_write(CNF1, (1 << BRP0) | (0 << SJW0));  // BRP = 1 (div par 2), SJW = 1
+
+    // CNF2: Configure Phase Segment 1 (PHSEG1) and Propagation Segment (PRSEG)
+    MCP2515_write(CNF2, (3 << PRSEG0)   // Propagation Segment = 1 TQ (valeur 0)
+                        | (3 << PHSEG10)  // Phase1 = 4 TQ (valeur 3 correspond à 4 TQ)
+                        | (1 << BTLMODE)); // Mode pour que Phase2 soit déterminé par CNF3
+
+    // CNF3: Configure Phase Segment 2 (PHSEG2)
+    MCP2515_write(CNF3, (2 << PHSEG20));  // Phase2 = 3 TQ (valeur 2)
+	
 	return 0;
 }
