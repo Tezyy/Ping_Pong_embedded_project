@@ -79,7 +79,7 @@ uint8_t mcp2515_init ()
     MCP2515_write(CNF1, (1 << BRP0) | (0 << SJW0));  // BRP = 1 (div par 2), SJW = 1
 
     // CNF2: Configure Phase Segment 1 (PHSEG1) and Propagation Segment (PRSEG)
-    MCP2515_write(CNF2, (3 << PRSEG0)   // Propagation Segment = 1 TQ (valeur 0)
+    MCP2515_write(CNF2, (0 << PRSEG0)   // Propagation Segment = 1 TQ (valeur 0)
                         | (3 << PHSEG10)  // Phase1 = 4 TQ (valeur 3 correspond à 4 TQ)
                         | (1 << BTLMODE)); // Mode pour que Phase2 soit déterminé par CNF3
 
