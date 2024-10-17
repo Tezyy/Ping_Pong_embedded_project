@@ -159,6 +159,16 @@ void exercise5_b(){
 	printf("data: %s \r\n\r\n", receive.data);
 }
 
+void exercise 6(){
+	message_t joystick_message;
+        joystick_message.id = 1;  // Example CAN ID
+        joystick_message.length = 2;  // Sending x and y positions (2 bytes)
+        joystick_message.data[0] = pos.x_percent;  // X position as percentage
+        joystick_message.data[1] = pos.y_percent;  // Y position as percentage
+        CAN_send(&joystick_message);
+}
+
+
 int main(void)
 {
 	USART_Init(MYUBRR);
@@ -175,8 +185,7 @@ int main(void)
 	uint8_t current_selection=0;
 	
 	mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);
-	
-	exercise5_b();	
+		
 
 	while(1)
 	{
