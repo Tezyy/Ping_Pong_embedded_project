@@ -159,7 +159,7 @@ void exercise5_b(){
 	printf("data: %s \r\n\r\n", receive.data);
 }
 
-void exercise 6(){
+void exercise6(){
 	message_t joystick_message;
         joystick_message.id = 1;  // Example CAN ID
         joystick_message.length = 2;  // Sending x and y positions (2 bytes)
