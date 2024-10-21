@@ -30,7 +30,7 @@ int main(void)
 		//Joystick x and y are stored in the first two bytes of the CAN message
         		uint8_t joystick_x = received_msg.byte[0];
        			uint8_t joystick_y = received_msg.byte[1];
-			printf("Received Joystick Coordinates - X: %d%%, Y: %d%%\n", joystick_x, joystick_y);
+				printf("Received Joystick Coordinates - X: %d%%, Y: %d%%\n", joystick_x, joystick_y);
 		}	
 	}
 	
