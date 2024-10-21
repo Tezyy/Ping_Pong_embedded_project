@@ -43,5 +43,6 @@ typedef struct Message {
 uint8_t CAN_init(void);
 void CAN_send(message_t *msg);
 message_t CAN_receive();
+void sendJoystickPositionCAN(uint8_t x_position, uint8_t y_position);
 
 #endif /* FRENCHCANCAN_H_ */
