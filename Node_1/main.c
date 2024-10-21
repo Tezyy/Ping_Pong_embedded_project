@@ -160,9 +160,9 @@ void exercise5_b(){
 }
 
 void exercise6(){
-	message_t joystick_message;
-        joystick_message.id = 1;  // Example CAN ID
-        joystick_message.length = 2;  // Sending x and y positions (2 bytes)
+message_t joystick_message;
+	joystick_message.id = 1;  // Example CAN ID
+       	joystick_message.length = 2;  // Sending x and y positions (2 bytes)
         joystick_message.data[0] = pos.x_percent;  // X position as percentage
         joystick_message.data[1] = pos.y_percent;  // Y position as percentage
         CAN_send(&joystick_message);
