@@ -74,7 +74,7 @@ uint8_t mcp2515_init ()
 		printf (" MCP2515 is NOT in configuration mode after reset !\n");
 	}
 	// More initialization
-	//mcp2515_write(MCP_CNF1, 0b00000011); //brp=4 but brp-1=3 for the register, nothing for sjw
+	mcp2515_write(MCP_CNF1, 0b00000011); //brp=4 but brp-1=3 for the register, nothing for sjw
 	mcp2515_write(MCP_CNF2, 0b10011001); //btl=1, sam=0,phase1=6 (real=7), prop=1(real=2)
 	mcp2515_write(MCP_CNF3, 0b00000101); //phase2=5 (real=6)
 	
