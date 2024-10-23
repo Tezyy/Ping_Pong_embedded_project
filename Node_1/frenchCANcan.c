@@ -61,11 +61,12 @@ message_t CAN_receive() {
 
 void sendJoystickPositionCAN(uint8_t x_position, uint8_t y_position) {
 	message_t msg;  // Use the correct structure defined in CAN.h
-	msg.id = 0x01;  // Arbitrary ID, adjust based on your setup
+	msg.id = (unsigned int) 0x01;  // Arbitrary ID, adjust based on your setup
 	msg.length = 2; // 2 bytes for X and Y positions
 	msg.data[0] = x_position;  // X-axis joystick value
 	msg.data[1] = y_position;  // Y-axis joystick value
 	
 	// Send the message via the function defined in CAN.c
 	CAN_send(&msg);
+
 }
