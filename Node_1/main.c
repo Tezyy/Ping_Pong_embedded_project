@@ -139,7 +139,7 @@ void exercise4_menu(){
 void exercise5(){
 	// to send things on the mcp2515
 	uint8_t data_send = 0xD7; //for example
-	mcp2515_write(0x31, data_send);
+	mcp2515_write(0x31, &data_send,1);
 	uint8_t result = mcp2515_read(0x31);
 	
 	printf("result = 0x%02X\n", result);
@@ -159,25 +159,6 @@ void exercise5_b(){
 	printf("data: %s \r\n\r\n", receive.data);
 }
 
-void exercise6_a(int16_t x,int16_t y){
-		message_t msg;  // Use the correct structure defined in CAN.h
-		msg.id = (unsigned int) 0x01;  // Arbitrary ID, adjust based on your setup
-		msg.length = 2; // 2 bytes for X and Y positions
-		msg.data[0] = (char) x;  // X-axis joystick value
-		msg.data[1] = (char) y;  // Y-axis joystick value
-		
-		// Send the message via the function defined in CAN.c
-		CAN_send(&msg);
-	
-		message_t receive = CAN_receive();
-		uint8_t data0 = receive.data[0]-128;
-		uint8_t data1 = receive.data[1]-128;
-		printf("Id: %d \r\n", receive.id);
-		printf("Length: %d \r\n", receive.length);
-		printf("data0: %d \r\n", data0);
-		printf("data1: %d \r\n\r\n\n\n", data1);	
-}
-
 int main(void)
 {
 	USART_Init(MYUBRR);
@@ -187,14 +168,15 @@ int main(void)
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
 	oled_init();
-	init_spi();	
-	mcp2515_init();
+	// init_spi() directly in mcp2515_init();
+	// mcp2515_init(); directly in Can_init
+	CAN_init();
+	// mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE if desired
 	
 	print_menu();
 	uint8_t current_selection=0;
 	
-	mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //MODE (LOPPBACK OR NORMAL)
-
+	//mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE
 		
 	while(1)
 	{
@@ -229,20 +211,12 @@ int main(void)
 				case 3 : oled_print_string("Choice : 4"); break;
 			}
 		}
-		
-		//printf("ecran fait\n\n");
+		printf("x_can :%d , y_can : %d",pos.x_percent_CAN,pos.y_percent_CAN);
 		// maintenant c'est bon on peut faire nos tests et modifs
-		printf("x percent %d\n", pos.x_percent);
-		printf("y percent %d\n", pos.y_percent);
-		
-		printf("x percent CAN %d\n", pos.x_percent_CAN);
-		printf("y percent CAN %d\n", pos.y_percent_CAN);
-		
-		//sendJoystickPositionCAN(pos.x_percent_CAN,pos.y_percent_CAN);
-
-		exercise6_a(pos.x_percent_CAN,pos.y_percent_CAN);
-		
-		_delay_ms(1500);
+		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
+		//message_t mess={.id=12, .length=2, .data[0]=1, .data[1]=56 };
+		//CAN_send(&mess);
+		_delay_ms(200);
 
 	}
 			
