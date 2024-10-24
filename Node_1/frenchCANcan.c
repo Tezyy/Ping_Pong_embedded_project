@@ -26,13 +26,13 @@ uint8_t CAN_init(void) {
 	uint8_t PHSG2 = 5;
 
 	uint8_t CNF1 = BRP;
-	mcp2515_write(MCP_CNF1, CNF1);
+	mcp2515_write(MCP_CNF1, &CNF1,1);
 
 	uint8_t CNF2 = (BTL << 7) | (PHSG1 << 3) | (PRSG);
-	mcp2515_write(MCP_CNF2, CNF2);
+	mcp2515_write(MCP_CNF2, &CNF2 ,1);
 
 	uint8_t CNF3 = PHSG2;
-	mcp2515_write(MCP_CNF3, CNF3);
+	mcp2515_write(MCP_CNF3, &CNF3,1);
 	
 	// Set up CAN configuration registers (e.g., bit timing, filters, etc.)
 	// Example: Set normal mode (after configuration mode)
@@ -66,23 +66,34 @@ uint8_t CAN_init(void) {
 
 // Function to send a CAN message
 int CAN_send(message_t *msg) {
+	
 	cli();
-
 	uint8_t status = mcp2515_read_status();
-	if (status & TXB0_TXREQ_bm | msg->length > 8)
+	printf("\nmsg_id: %d et status %d et  %d\n",msg->id,status,status & 0b100 | msg->length > 8);
+	
+	if (status & 0b100 | msg->length > 8){
+		printf("test\n\n");
 	return 1;
-
+	}
+	printf("test passé");
 	// Load the ID and data into the correct transmit buffer of MCP2515
-	mcp2515_write(MCP_TXB0SIDH, (uint8_t)(msg->id >> 3));  // Standard ID high, à changer avec les << ou >> ??
-	mcp2515_write(MCP_TXB0SIDL, (uint8_t)(msg->id << 5));  // Standard ID low
-
-	// Load the length of the message (DLC)
-	mcp2515_write(MCP_TXB0DLC, msg->length);
+	uint8_t IDHIGH = (msg->id >> 3);
+	uint8_t IDLOW = (msg->id << 5);
+	mcp2515_write(MCP_TXB0SIDH, &IDHIGH,1);  // Standard ID high, à changer avec les << ou >> ??
+	mcp2515_write(MCP_TXB0SIDL, &IDLOW,1);  // Standard ID low
+	printf("\nmsg_id2: %d\n",msg->id);
+	
+	// Load the length of the message
+	
+	uint8_t total_length =(msg->length);
+	mcp2515_write(MCP_TXB0DLC, &total_length,1);
+	
+	printf("msg_length: %d\n",msg->length);
 
 	// Load the data
-	for (uint8_t i = 0; i < msg->length; i++) {
-		mcp2515_write(MCP_TXB0D0, msg->data[i]);
-	}
+	printf("data : %d et %d",msg->data[0],msg->data[1]);
+	mcp2515_write(MCP_TXB0D0, msg->data,msg->length);
+	
 
 	// Request to send the message using the RTS command
 	req_to_send(MCP_RTS_TX0); // Request to send on TX buffer 0
@@ -94,7 +105,7 @@ int CAN_send(message_t *msg) {
 // Function to receive a CAN message
 message_t CAN_receive() {
 
-	//verification 
+	//verification
 
 	if (!data_pending){printf("data pending CAN_receive");
 	}
@@ -103,10 +114,10 @@ message_t CAN_receive() {
 	uint8_t buffer_addr;
 
 	if (status & MCP_RX0IF){
-	buffer_addr = MCP_RXB0CTRL;
+		buffer_addr = MCP_RXB0CTRL;
 	}
 	else if (status & MCP_RX1IF){
-	buffer_addr = MCP_RXB1CTRL;
+		buffer_addr = MCP_RXB1CTRL;
 	}
 
 	message_t message = {};
@@ -126,16 +137,12 @@ message_t CAN_receive() {
 
 void sendJoystickPositionCAN(uint8_t x_position, uint8_t y_position) {
 	message_t msg;  // Use the correct structure defined in CAN.h
-	msg.id = (unsigned int) 0x01;  // Arbitrary ID, adjust based on your setup
+	msg.id = 1;  // Arbitrary ID, adjust based on your setup
 	msg.length = 2; // 2 bytes for X and Y positions
 	msg.data[0] = x_position;  // X-axis joystick value
 	msg.data[1] = y_position;  // Y-axis joystick value
 	
 	// Send the message via the function defined in CAN.c
 	CAN_send(&msg);
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 2dce385c648bd115f54eacfecb3ee57069718a9d
 }
