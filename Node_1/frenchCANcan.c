@@ -133,5 +133,9 @@ void sendJoystickPositionCAN(uint8_t x_position, uint8_t y_position) {
 	
 	// Send the message via the function defined in CAN.c
 	CAN_send(&msg);
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 2dce385c648bd115f54eacfecb3ee57069718a9d
 }
