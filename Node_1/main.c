@@ -214,7 +214,6 @@ int main(void)
 		sendJoystickPositionCAN((uint8_t)(pos.x_percent), (uint8_t)(pos.y_percent));  // Convert percentage to unsigned values
 
 		
-		_delay_ms(200);
 
 	}
 			
