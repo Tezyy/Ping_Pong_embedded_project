@@ -16,7 +16,7 @@ uint8_t mcp2515_read(uint8_t adress){
 
 	spi_data(MCP_READ);
 	spi_data(adress);
-	uint8_t result = spi_data(U);
+	uint8_t result = spi_data(0X00);
 
 	set_bit(PORTB, PB4);
 
@@ -57,7 +57,7 @@ void req_to_send(uint8_t stat){
 uint8_t mcp2515_read_status(){
 	clear_bit(PORTB, PB4);
 	spi_data(MCP_READ_STATUS);
-	uint8_t result = spi_data();
+	uint8_t result = spi_data(0X00);
 	set_bit(PORTB, PB4);
 	return result;
 }
@@ -87,7 +87,7 @@ uint8_t mcp2515_init ()
 	if (( value & MODE_MASK ) != MODE_CONFIG ) {
 		printf (" MCP2515 is NOT in configuration mode after reset !\n");
 		return 1;
-	} else {
+		} else {
 		return 0;
 	}
 }

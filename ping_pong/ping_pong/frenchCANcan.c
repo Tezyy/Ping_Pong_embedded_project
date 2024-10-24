@@ -69,7 +69,7 @@ int CAN_send(message_t *msg) {
 	cli();
 
 	uint8_t status = mcp2515_read_status();
-	if (status & TXB0_TXREQ_bm | msg->length > 8)
+	if (status & 0b100 | msg->length > 8)
 	return 1;
 
 	// Load the ID and data into the correct transmit buffer of MCP2515
@@ -94,7 +94,7 @@ int CAN_send(message_t *msg) {
 // Function to receive a CAN message
 message_t CAN_receive() {
 
-	//verification 
+	//verification
 
 	if (!data_pending){printf("data pending CAN_receive");
 	}
@@ -103,10 +103,10 @@ message_t CAN_receive() {
 	uint8_t buffer_addr;
 
 	if (status & MCP_RX0IF){
-	buffer_addr = MCP_RXB0CTRL;
+		buffer_addr = MCP_RXB0CTRL;
 	}
 	else if (status & MCP_RX1IF){
-	buffer_addr = MCP_RXB1CTRL;
+		buffer_addr = MCP_RXB1CTRL;
 	}
 
 	message_t message = {};

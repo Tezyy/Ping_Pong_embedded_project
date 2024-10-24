@@ -13,7 +13,7 @@ void init_spi(){
 	//PORTB |= (1 << PB4); // Set SS high (deselect slave) // A en pas activer ??
 }
 
-uint8_t SPI_shift_data(uint8_t data)
+uint8_t spi_data(uint8_t data)
 {
     // start transmission
     SPDR = data;
