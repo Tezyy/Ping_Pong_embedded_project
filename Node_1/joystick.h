@@ -19,6 +19,8 @@ typedef struct {
 typedef struct {
 	int16_t x_percent; 
 	int16_t y_percent;
+	uint8_t x_percent_CAN;
+	uint8_t y_percent_CAN;
 } JoystickPosition;
 
 typedef struct {
