@@ -20,6 +20,21 @@ void configure_pwm_channel1(void) {
     PWM->PWM_ENA = PWM_ENA_CHID1;  // Enable PWM channel 1
 }
 
+void PWM_set_duty_cycle(float duty_cycle)
+{
+		
+	if (duty_cycle <= 0.91) {
+		duty_cycle = 0.91;
+	}	
+	else if (duty_cycle >= 2.05) {
+		duty_cycle = 2.05;
+	}
+
+	PWM->PWM_CH_NUM[1].PWM_CDTY = (duty_cycle/20) *8192;
+
+}
+
+
 /*
 Clock Setup: The PMC_PCER1 enables the PWM clock, and PMC_PCER0 enables the peripheral clock for PIOB, which includes pin PB13.
 Pin Configuration: PIO_PDR and PIO_ABSR configure PB13 to use the peripheral B function (PWM output).
