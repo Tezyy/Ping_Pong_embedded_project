@@ -6,7 +6,7 @@
 
 uint8_t mcp2515_read(uint8_t adress);
 
-uint8_t mcp2515_write(uint8_t adress, uint8_t data );
+uint8_t mcp2515_write(uint8_t adress, uint8_t *data,uint8_t buffer_size );
 
 void req_to_send(uint8_t stat);
 

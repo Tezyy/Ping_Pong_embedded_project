@@ -139,7 +139,7 @@ void exercise4_menu(){
 void exercise5(){
 	// to send things on the mcp2515
 	uint8_t data_send = 0xD7; //for example
-	mcp2515_write(0x31, data_send);
+	mcp2515_write(0x31, &data_send,1);
 	uint8_t result = mcp2515_read(0x31);
 	
 	printf("result = 0x%02X\n", result);
@@ -211,11 +211,11 @@ int main(void)
 				case 3 : oled_print_string("Choice : 4"); break;
 			}
 		}
-		
+		printf("x_can :%d , y_can : %d",pos.x_percent_CAN,pos.y_percent_CAN);
 		// maintenant c'est bon on peut faire nos tests et modifs
-		sendJoystickPositionCAN((uint8_t)(pos.x_percent), (uint8_t)(pos.y_percent));  // Convert percentage to unsigned values
-		
-		
+		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
+		//message_t mess={.id=12, .length=2, .data[0]=1, .data[1]=56 };
+		//CAN_send(&mess);
 		_delay_ms(200);
 
 	}

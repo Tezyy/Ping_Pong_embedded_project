@@ -36,7 +36,7 @@
 
 // CAN message structure
 typedef struct Message {
-	unsigned int id;
+	uint8_t id;
 	uint8_t length;
 	uint8_t data[8];
 } message_t;
