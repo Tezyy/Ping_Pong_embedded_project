@@ -1,9 +1,25 @@
-#include "servo.h"
+#include "PWM.h"
 #include <sam.h>
 
-// Function to configure the PWM
-void configure_pwm_channel1(void) {
-    // Enable PIOB and PWM peripheral clocks
+#define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
+
+#define MIN_PULSE_WIDTH 900   // Minimum pulse width in microseconds (0.9 ms)
+#define MAX_PULSE_WIDTH 2100  // Maximum pulse width in microseconds (2.1 ms)
+#define MID_PULSE_WIDTH 1500  // Middle/Neutral pulse width in microseconds (1.5 ms)
+
+#define PWM_CHANNEL 1         // Use PWM channel 1
+#define PB13_PIN 13           // PB13 corresponds to pin 13
+
+void PWM_init() {
+	
+// 	// Enable peripheral clock for PWM
+// 	PMC->PMC_PCER1 |= PMC_PCER1_PID36;
+// 
+// 	// Set PWM channel mode for PB13
+// 	PIOB->PIO_PDR |= (1 << PB13_PIN);  // Disable PIO control for PB13
+// 	PIOB->PIO_ABSR |= (1 << PB13_PIN); // Set PB13 for Peripheral B (PWM)
+	
+	// Enable PIOB and PWM peripheral clocks
     PMC->PMC_PCER0 |= (1 << ID_PIOB);  // Enable clock for PIOB
     PMC->PMC_PCER1 |= (1 << (ID_PWM - 32));  // Enable clock for PWM
 
@@ -11,39 +27,37 @@ void configure_pwm_channel1(void) {
     PIOB->PIO_PDR |= PIO_PDR_P13;    // Disable PIO control for PB13 (peripheral control)
     PIOB->PIO_ABSR |= PIO_ABSR_P13;  // Select peripheral B for PB13 (PWM functionality)
 
-    // Configure the PWM channel
-    PWM->PWM_CH_NUM[1].PWM_CMR = PWM_CMR_CPRE_MCK_DIV_1024;  // Set clock to master clock/1024
-    PWM->PWM_CH_NUM[1].PWM_CPRD = 8192;  // Set period to 20ms (assuming a 84MHz clock)
-    PWM->PWM_CH_NUM[1].PWM_CDTY = 409;  // Set duty cycle to 0.9ms (initial position)
+	// Set the PWM clock (PWM_CLK is MCK divided by a prescaler)
+	PWM->PWM_CLK = PWM_CLK_PREA(0) | PWM_CLK_DIVA(84); 
+	/*PWM_CLK_PREA(0): Selects Clock A without any prescaling.
+	PWM_CLK_DIVA(84): Divides the 84 MHz master clock by 84 to get 1 MHz for the PWM clock.
+	
+	This 1 MHz PWM clock means that each clock cycle represents 1 microsecond,
+	making it easy to handle pulse widths for the servo,
+	as you can directly set the pulse width in microseconds (e.g., 1500 for 1.5 ms).*/
 
-    // Enable the PWM channel
-    PWM->PWM_ENA = PWM_ENA_CHID1;  // Enable PWM channel 1
+	// Configure PWM channel
+	
+	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CMR = PWM_CMR_CPRE_CLKA | PWM_CMR_CPOL;  // Use Clock A with inverted polarity
+	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CPRD = PWM_PERIOD;        // Set period to 20 ms (20000 us)
+	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CDTY = MID_PULSE_WIDTH;   // Start with the mid-point pulse (1.5 ms)
+
+	// Enable the PWM channel
+	PWM->PWM_ENA = (1 << PWM_CHANNEL);
 }
 
-void PWM_set_duty_cycle(float duty_cycle)
-{
+void set_PWM_duty(uint16_t pulse_width) {
+	
+	// Safety check: limit pulse width to the servo's valid range
+	if (pulse_width < MIN_PULSE_WIDTH) {
+		pulse_width = MIN_PULSE_WIDTH;  // Clamp to minimum
+		}
 		
-	if (duty_cycle <= 0.91) {
-		duty_cycle = 0.91;
-	}	
-	else if (duty_cycle >= 2.05) {
-		duty_cycle = 2.05;
-	}
+	else if (pulse_width > MAX_PULSE_WIDTH) {
+		pulse_width = MAX_PULSE_WIDTH;  // Clamp to maximum
+		}
+	
 
-	PWM->PWM_CH_NUM[1].PWM_CDTY = (duty_cycle/20) *8192;
-
+	// Set the new duty cycle (pulse width)
+	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CDTYUPD = pulse_width;
 }
-
-
-/*
-Clock Setup: The PMC_PCER1 enables the PWM clock, and PMC_PCER0 enables the peripheral clock for PIOB, which includes pin PB13.
-Pin Configuration: PIO_PDR and PIO_ABSR configure PB13 to use the peripheral B function (PWM output).
-PWM Configuration:
-- PWM_CMR: Sets the clock prescaler to divide the master clock by 1024.
-- PWM_CPRD: Defines the period of the PWM signal (8192 ticks for 20 ms).
-- PWM_CDTY: Sets the duty cycle (409 ticks for 0.9 ms).
-- PWM Enable: PWM_ENA enables the PWM channel 1.
-
-We can modify the duty cycle in the loop to control the servo position,
-adjusting the value in PWM_CDTY between 0.9 ms (409) and 2.1 ms (1720) for full-range motion.
-*/
