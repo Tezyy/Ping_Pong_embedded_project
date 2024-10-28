@@ -60,4 +60,5 @@ void set_PWM_duty(uint16_t pulse_width) {
 
 	// Set the new duty cycle (pulse width)
 	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CDTYUPD = pulse_width;
+    PWM->PWM_SCUC = PWM_SCUC_UPDULOCK;
 }
