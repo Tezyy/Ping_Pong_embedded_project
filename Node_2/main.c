@@ -8,8 +8,9 @@
 
 #include "servo.h"
 #include "uart.h"
+#include "can.h"
 
-CanInit_t bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 41, .smp = 0};
+CanInit bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 41, .smp = 0};
 
 CanMsg receive_can;
 
