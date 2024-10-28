@@ -20,7 +20,7 @@ CanMsg receive_can;
 int main()
 {
 	SystemInit();
-	configure_pwm_channel1();
+	PWM_init();   // Initialize PWM
 
 	WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
 
@@ -37,8 +37,7 @@ int main()
 			printf("Receiving");
 			can_printmsg(receive_can);
 			}
-// 	PIOB->PIO_CODR = PIO_PB13;
-// 	PIOB->PIO_sODR = PIO_PB13;
+		set_PWM_duty(1500);
 	
 	}
 }
