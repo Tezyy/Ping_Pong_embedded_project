@@ -9,6 +9,9 @@
 #include "servo.h"
 #include "uart.h"
 
+CanInit_t bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 41, .smp = 0};
+
+CanMsg receive_can;
 
 int main(void)
 {
@@ -16,7 +19,7 @@ int main(void)
 	//configure_pwm_channel1(); // Configure PWM on channel 1
 
 	uart_init(84000000, 9600);
-	can_init(/*Adjust this value for CAN bus timing (based on system clock and bus requirements)*/, 0); // 0 for no RX interrupt/1 for RX interrupt
+	can_init(bit_timing, 0); // 0 for no RX interrupt/1 for RX interrupt
 
 	CanMsg received_msg;
 	

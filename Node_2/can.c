@@ -94,7 +94,7 @@ void can_tx(CanMsg m){
 }
 
 uint8_t can_rx(CanMsg* m){
-    if(!(CAN0->CAN_MB[rxMailbox].CAN_MSR & CAN_MSR_MRDY)){
+    if(!(CAN0->CAN_MB[rxMailbox].CAN_MSR & CAN_MSR_MRDY)){ //point d'exclamation ou pas ??
         return 0;
     }
 
