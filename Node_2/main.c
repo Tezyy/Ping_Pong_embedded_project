@@ -37,8 +37,6 @@ int main()
 			printf("Receiving");
 			can_printmsg(receive_can);
 			}
-// 	PIOB->PIO_CODR = PIO_PB13;
-// 	PIOB->PIO_sODR = PIO_PB13;
-	
+		set_PWM_duty(1500);
 	}
 }
