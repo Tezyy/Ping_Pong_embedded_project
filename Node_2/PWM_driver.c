@@ -37,6 +37,7 @@ void PWM_init() {
 	as you can directly set the pulse width in microseconds (e.g., 1500 for 1.5 ms).*/
 
 	// Configure PWM channel
+	PWM->PWM_SCM = PWM_SCM_UPDM_MODE0;
 	
 	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CMR = PWM_CMR_CPRE_CLKA | PWM_CMR_CPOL;  // Use Clock A with inverted polarity
 	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CPRD = PWM_PERIOD;        // Set period to 20 ms (20000 us)
