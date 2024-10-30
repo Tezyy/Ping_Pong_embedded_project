@@ -11,12 +11,13 @@
 #include <stdint.h>
 
 
-uint8_t mcp2515_read(uint8_t adress){
+uint8_t mcp2515_read(uint8_t adress, uint8_t *data_buffer, int buffer_size){
 	clear_bit(PORTB, PB4);
 
 	spi_data(MCP_READ);
 	spi_data(adress);
-	uint8_t result = spi_data(0X00);
+	for (int i = 0; i < buffer_size; i++)
+	uint8_t data_buffer[i] = spi_data(0X00);
 
 	set_bit(PORTB, PB4);
 
@@ -28,12 +29,12 @@ uint8_t mcp2515_read(uint8_t adress){
 // {
 //     clear_bit(PORTB, PB4);
 
-//     SPI_shift_data(MCP_READ);
+//     spi_data(MCP_READ);
 
-//     SPI_shift_data(addr);
+//     spi_data(addr);
 
 //     for (int i = 0; i < buffer_size; i++)
-//     data_buffer[i] = SPI_shift_data(DONT_CARE);
+//     data_buffer[i] = spi_data(DONT_CARE);
 
 //     clear_bit(PORTB, PB4);
 // }
