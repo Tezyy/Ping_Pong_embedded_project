@@ -2,7 +2,6 @@
 #include <sam.h>
 
 #define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
-
 #define MIN_PULSE_WIDTH 900   // Minimum pulse width in microseconds (0.9 ms)
 #define MAX_PULSE_WIDTH 2100  // Maximum pulse width in microseconds (2.1 ms)
 #define MID_PULSE_WIDTH 1500  // Middle/Neutral pulse width in microseconds (1.5 ms)
@@ -61,5 +60,18 @@ void set_PWM_duty(uint16_t pulse_width) {
 
 	// Set the new duty cycle (pulse width)
 	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CDTYUPD = pulse_width;
-    PWM->PWM_SCUC = PWM_SCUC_UPDULOCK;
+    PWM->PWM_SCUC = PWM_SCUC_UPDULOCK; //update at the new clock cycle
+}
+
+// -180< INPUT <180
+int8_t PWM_value(uint8_t input_joystick){
+	int8_t pwm_cdty = 0;
+	if (input_joystick < -180) input_joystick =-180;
+	else if (input_joystick > 180) input_joystick = 180;
+
+	input_joystick = input_joystick/1.8;
+	int8_t input_min = -100.0, input_max = 100.0;
+	int8_t out_min = 0.9, out_max = 2.1;
+
+	return pwm_cdty = 0.006*input_joystick +1.5;
 }

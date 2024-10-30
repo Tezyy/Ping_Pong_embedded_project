@@ -27,5 +27,13 @@ void PWM_init(void);
  */
 void set_PWM_duty(uint16_t pulse_width);
 
+/**
+ * @brief Calculate the duty cycle for a certain joystick position
+ *
+ * @param input_joystick value of the joystick should be between -180< INPUT <180
+ */
+int8_t PWM_value(uint8_t input_joystick);
+
+
 #endif /* PWM_H */
 
