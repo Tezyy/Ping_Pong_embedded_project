@@ -30,6 +30,7 @@ int main()
 	uart_init(F_CPU, BAUDRATE);
 	can_init(bit_timing, 0);
 
+	time_init();
 
 	while (1)
 	{
