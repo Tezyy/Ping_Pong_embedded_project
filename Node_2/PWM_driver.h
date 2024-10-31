@@ -32,7 +32,7 @@ void set_PWM_duty(uint16_t pulse_width);
  *
  * @param input_joystick value of the joystick should be between -180< INPUT <180
  */
-int8_t PWM_value(uint8_t input_joystick);
+uint16_t PWM_value(int8_t input_joystick);
 
 
 #endif /* PWM_H */

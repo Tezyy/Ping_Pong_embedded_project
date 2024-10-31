@@ -1,4 +1,7 @@
 #include "can.h"
+#include "PWM_driver.h"
+#include "time.h"
+
 #include <sam.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -7,7 +10,7 @@
 // Import UART from Node 2 starter code, then edit include path accordingly.
 // Also, remember to update the makefile
 #include "uart.h"
-#include "servo.h"
+
 
 #define F_CPU 84000000
 #define BAUDRATE 9600
@@ -15,6 +18,8 @@
 CanInit_t bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 41, .smp = 0};
 
 CanMsg receive_can;
+
+uint16_t pwm_duty_joystick ;
 
 
 int main()
@@ -35,10 +40,14 @@ int main()
 	while (1)
 	{
 		while (can_rx(&receive_can)){
-			printf("Receiving");
+			//printf("Receiving");
 			can_printmsg(receive_can);
+			//printf("byte 1 : %d\n", (receive_can.byte[1]-128));
+			pwm_duty_joystick=PWM_value((receive_can.byte[0]-128));
+			//printf("pwm_duty_joystick : %d\n\n", pwm_duty_joystick);
 			}
-		set_PWM_duty(1500);
+		set_PWM_duty(pwm_duty_joystick);
+		
 	
 	}
 }
