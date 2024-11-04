@@ -1,7 +1,9 @@
-#ifndef INCFILE1_H_
-#define INCFILE1_H_
+#ifndef ADC_H_
+#define ADC_H_
+
+#include <stdint.h> //standard integer type
 
 void adc_init();
-uint16_t adc_read();
+uint32_t adc_read();
 
-#endif /* INCFILE1_H_ */
+#endif /* ADC_H_ */
