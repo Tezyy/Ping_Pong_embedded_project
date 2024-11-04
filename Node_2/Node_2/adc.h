@@ -2,6 +2,6 @@
 #define INCFILE1_H_
 
 void adc_init();
-void adc_read();
+uint16_t adc_read();
 
 #endif /* INCFILE1_H_ */
