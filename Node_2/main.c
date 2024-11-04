@@ -1,7 +1,6 @@
 #include "can.h"
 #include "PWM_driver.h"
 #include "time.h"
-#include "adc.h"
 
 #include <sam.h>
 #include <stdarg.h>
@@ -35,7 +34,6 @@ int main()
 	
 	uart_init(F_CPU, BAUDRATE);
 	can_init(bit_timing, 0);
-	adc_init();
 
 	time_init();
 
@@ -43,14 +41,16 @@ int main()
 	{
 		while (can_rx(&receive_can)){
 			//printf("Receiving");
-			can_printmsg(receive_can);
+			//can_printmsg(receive_can);
 			//printf("byte 1 : %d\n", (receive_can.byte[1]-128));
-			pwm_duty_joystick=PWM_value((receive_can.byte[0]-128));
+			//pwm_duty_joystick=PWM_value((receive_can.byte[0]-128));
 			//printf("pwm_duty_joystick : %d\n\n", pwm_duty_joystick);
-			set_PWM_duty(pwm_duty_joystick);
+			set_PWM_duty(PWM_value((receive_can.byte[0]-128)));
 			}
 		
-		//adc_read();
+		
 	
 	}
+}
+
 }
