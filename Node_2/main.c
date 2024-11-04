@@ -47,8 +47,9 @@ int main()
 			//printf("byte 1 : %d\n", (receive_can.byte[1]-128));
 			pwm_duty_joystick=PWM_value((receive_can.byte[0]-128));
 			//printf("pwm_duty_joystick : %d\n\n", pwm_duty_joystick);
+			set_PWM_duty(pwm_duty_joystick);
 			}
-		set_PWM_duty(pwm_duty_joystick);
+		
 		//adc_read();
 	
 	}
