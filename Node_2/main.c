@@ -1,6 +1,7 @@
 #include "can.h"
 #include "PWM_driver.h"
 #include "time.h"
+#include "adc.h"
 
 #include <sam.h>
 #include <stdarg.h>
@@ -34,6 +35,7 @@ int main()
 	
 	uart_init(F_CPU, BAUDRATE);
 	can_init(bit_timing, 0);
+	adc_init();
 
 	time_init();
 
@@ -47,7 +49,7 @@ int main()
 			//printf("pwm_duty_joystick : %d\n\n", pwm_duty_joystick);
 			}
 		set_PWM_duty(pwm_duty_joystick);
-		
+		//adc_read();
 	
 	}
 }
