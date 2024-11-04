@@ -1,6 +1,7 @@
 #include "can.h"
 #include "PWM_driver.h"
 #include "time.h"
+#include "adc.h"
 
 #include <sam.h>
 #include <stdarg.h>
@@ -20,6 +21,7 @@ CanInit_t bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 
 CanMsg receive_can;
 
 uint16_t pwm_duty_joystick ;
+uint32_t adc_value ;
 
 
 int main()
@@ -27,7 +29,7 @@ int main()
 	SystemInit();
 	PWM_init();   // Initialize PWM
 
-	WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
+	//WDT->WDT_MR = WDT_MR_WDDIS; // Disable Watchdog Timer
 
 	//PMC->PMC_PCER0 |= (1 << ID_PIOB);  // Enable clock for PIOB
 	//PIOB->PIO_OER = PI_PB13; //Configure PB13 as an output
@@ -36,10 +38,10 @@ int main()
 	can_init(bit_timing, 0);
 
 	time_init();
-
+	adc_init();
 	while (1)
 	{
-		while (can_rx(&receive_can)){
+		if(can_rx(&receive_can)){
 			//printf("Receiving");
 			//can_printmsg(receive_can);
 			//printf("byte 1 : %d\n", (receive_can.byte[1]-128));
@@ -47,10 +49,9 @@ int main()
 			//printf("pwm_duty_joystick : %d\n\n", pwm_duty_joystick);
 			set_PWM_duty(PWM_value((receive_can.byte[0]-128)));
 			}
-		
-		
+		//set_PWM_duty(2000);
+		adc_value=adc_read();
+		printf("adc value adr0 : %d\n", adc_value);
 	
 	}
-}
-
 }
