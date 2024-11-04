@@ -216,7 +216,7 @@ int main(void)
 		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
 		//message_t mess={.id=12, .length=2, .data[0]=1, .data[1]=56 };
 		//CAN_send(&mess);
-		_delay_ms(200);
+		_delay_ms(10);
 		printf("oui");
 		
 
