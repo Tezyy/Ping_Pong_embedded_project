@@ -8,7 +8,7 @@ void fleche(){
 }
 
 const char* menu_options[NUM_OPTIONS] = {
-	"Option 1",
+	"Start Game",
 	"Option 2"
 };
 

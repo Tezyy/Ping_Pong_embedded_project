@@ -164,7 +164,7 @@ int main(void)
 	USART_Init(MYUBRR);
 	init_printf();	
 	XMEM_init();
-	//SRAM_test();
+	SRAM_test();
 	adc_init();
 	JoystickCalibration calib = calibrateJoystick();
 	oled_init();
@@ -174,6 +174,8 @@ int main(void)
 	// mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE if desired
 	
 	print_menu();
+	
+	//declaration
 	uint8_t current_selection=0;
 	
 	//mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE
@@ -205,20 +207,32 @@ int main(void)
 			oled_clear();
 			oled_set_pos(0,0);
 			switch(current_selection){
-				case 0 : oled_print_string("Choice : 1"); break;
+				case 0 : oled_print_string("The game starts"); 
+				message_t mess_game={.id=11, .length=1, .data[0]=1 };
+				CAN_send(&mess_game);
+				printf("jeu démarré");
+				_delay_ms(10);
+				break;
 				case 1 : oled_print_string("Choice : 2"); break;
 				case 2 : oled_print_string("Choice : 3"); break;
 				case 3 : oled_print_string("Choice : 4"); break;
 			}
 		}
-		printf("x_can :%d , y_can : %d",pos.x_percent_CAN,pos.y_percent_CAN);
+		
+		//id = 13 for button_right state
+		if (state.button_right){
+			message_t mess={.id=13, .length=1, .data[0]=1 };
+			CAN_send(&mess);
+			_delay_ms(10);
+		}
+		//printf("x_can :%d , y_can : %d\n",pos.x_percent_CAN,pos.y_percent_CAN);
 		// maintenant c'est bon on peut faire nos tests et modifs
+		
 		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
 		//message_t mess={.id=12, .length=2, .data[0]=1, .data[1]=56 };
 		//CAN_send(&mess);
+		//printf("hey\n");
 		_delay_ms(10);
-		printf("oui");
-		
 
 	}
 			
