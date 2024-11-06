@@ -1,20 +1,17 @@
-// #ifndef MOTOR_DRIVER_H
-// #define MOTOR_DRIVER_H
+#ifndef MOTOR_H
+#define MOTOR_H
 
-// #include <sam.h>
-// #include <stdint.h>
-// #include "can.h"
-// #include "PWM_driver.h"
+#include <stdint.h>
 
-// // Constants for joystick configuration
-// #define JOYSTICK_MID      128         // Midpoint for joystick (assuming 8-bit resolution)
-// #define JOYSTICK_THRESHOLD 10          // Threshold to determine motor direction
+// PWM configuration constants
+#define PWM_PERIOD 20000    // PWM period in microseconds (20 ms)
+#define PWM_MAX 19000      // Maximum pulse width
+#define PWM_MIN 0           // Minimum pulse width
+#define MID_PULSE_WIDTH 1500 // Middle pulse width, often around 1.5 ms for a servo at center position
 
-// // Function prototypes
-// void configure_motor_driver(void);
-// void control_motor_with_joystick(CanMsg *receive_can);
+// Function prototypes
+void PWM_motor_init(void);
+void set_PWM_duty_motor(uint16_t pulse_width);
+uint16_t PWM_value_motor(int8_t input_joystick);
 
-// // Optionally, you can declare any global variables or types needed
-// uint16_t pwm_duty_joystick; // Variable to hold PWM duty cycle based on joystick position
-
-// #endif // MOTOR_DRIVER_H
+#endif // MOTOR_H
