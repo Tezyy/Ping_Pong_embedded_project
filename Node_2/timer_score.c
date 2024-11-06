@@ -30,16 +30,13 @@ time_now() : provides the current time in terms of ticks (or clock cycles) since
 
 static uint64_t start_time = 0;
 static uint64_t end_time = 0;
-static uint64_t en_cours = 0;
 
 void start_score_timer(void) {
 	start_time = time_now();
-	en_cours = 1;
 }
 
 uint64_t stop_score_timer(void) {
 	end_time = time_now();
-	en_cours = 0;
 
 	return end_time - start_time;  //return le temps écoulé
 }
@@ -47,5 +44,4 @@ uint64_t stop_score_timer(void) {
 void reset_score_timer(void) {
 	start_time = 0;
 	end_time = 0;
-	en_cours = 0;
 }
