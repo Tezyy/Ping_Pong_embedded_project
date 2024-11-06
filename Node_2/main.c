@@ -80,7 +80,7 @@ int main()
 					break;
 			}
 			adc_value=adc_read();
-			if (adc_value <100){
+			if (adc_value <500){
 				printf("adc value %u", adc_value);
 				score =stop_score_timer();
 				printf("SCORE %f seconds \r\n",totalSeconds(score));
