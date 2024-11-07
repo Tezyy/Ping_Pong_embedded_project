@@ -1,4 +1,5 @@
 #include <sam.h>
+#include "encoder.h"
 
 // Initialize TC2 in quadrature mode for channel 0
 void init_TC2_quadrature_mode() {

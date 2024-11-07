@@ -4,6 +4,9 @@
 #include "adc.h"
 #include "timer_score.h"
 #include "uart.h"
+#include "motor.h"
+#include "encoder.h"
+
 
 #include <sam.h>
 #include <stdarg.h>
