@@ -105,7 +105,8 @@ int main()
 				game_end =0;
 				
 			}
-			
+			// METTRE game_end =1 dans le if,puis fonction qui envoie le score au node 1 et remet 
+			// le game_end à 0 pour être prêt à repartir à jouer
 		}
 // 		if (game_end !=0){
 // 			printf("TU AS PERDU...");
