@@ -17,7 +17,7 @@ uint8_t spi_data(uint8_t data)
 {
     // start transmission
     SPDR = data;
-	printf("%d\n",data);
+	//printf("%d\n",data);
     // wait for transmission complete
     while (!(SPSR & (1 << SPIF)))
     ;

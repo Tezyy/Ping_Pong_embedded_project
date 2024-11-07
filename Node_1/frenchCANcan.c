@@ -69,29 +69,24 @@ int CAN_send(message_t *msg) {
 	
 	cli();
 	uint8_t status = mcp2515_read_status();
-	printf("\nmsg_id: %d et status %d et  %d\n",msg->id,status,status & 0b100 | msg->length > 8);
+	//printf("\nmsg_id: %d et status %d et  %d\n",msg->id,status,status & 0b100 | msg->length > 8);
 	
-	if (status & 0b100 | msg->length > 8){
-		printf("test\n\n");
-	return 1;
-	}
-	printf("test passé");
 	// Load the ID and data into the correct transmit buffer of MCP2515
 	uint8_t IDHIGH = (msg->id >> 3);
 	uint8_t IDLOW = (msg->id << 5);
 	mcp2515_write(MCP_TXB0SIDH, &IDHIGH,1);  // Standard ID high, à changer avec les << ou >> ??
 	mcp2515_write(MCP_TXB0SIDL, &IDLOW,1);  // Standard ID low
-	printf("\nmsg_id2: %d\n",msg->id);
+	//printf("\nmsg_id2: %d\n",msg->id);
 	
 	// Load the length of the message
 	
 	uint8_t total_length =(msg->length);
 	mcp2515_write(MCP_TXB0DLC, &total_length,1);
 	
-	printf("msg_length: %d\n",msg->length);
+	//printf("msg_length: %d\n",msg->length);
 
 	// Load the data
-	printf("data : %d et %d",msg->data[0],msg->data[1]);
+	//printf("data : %d et %d",msg->data[0],msg->data[1]);
 	mcp2515_write(MCP_TXB0D0, msg->data,msg->length);
 	
 
@@ -136,8 +131,9 @@ message_t CAN_receive() {
 }
 
 void sendJoystickPositionCAN(uint8_t x_position, uint8_t y_position) {
+	//printf("bjr j'envoie");
 	message_t msg;  // Use the correct structure defined in CAN.h
-	msg.id = 1;  // Arbitrary ID, adjust based on your setup
+	msg.id = 12;  // Arbitrary ID, adjust based on your setup
 	msg.length = 2; // 2 bytes for X and Y positions
 	msg.data[0] = x_position;  // X-axis joystick value
 	msg.data[1] = y_position;  // Y-axis joystick value

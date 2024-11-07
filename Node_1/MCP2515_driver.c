@@ -47,7 +47,7 @@ uint8_t mcp2515_write(uint8_t adress, uint8_t *data, uint8_t buffer_size ){
 
 	for (int i = 0; i < buffer_size; i++){
 	spi_data(data[i]);
-	printf("\nin mcp2515 : %d\n",data[i]);
+	//printf("\nin mcp2515 : %d\n",data[i]);
 	}
 	set_bit(PORTB, PB4);
 }

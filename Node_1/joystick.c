@@ -24,11 +24,11 @@ JoystickPosition getJoystickPosition(uint8_t adc_x, uint8_t adc_y, JoystickCalib
 	JoystickPosition pos;
 	
 	// Convert ADC value to percentage for X-axis
-	pos.x_percent = ((int16_t)adc_x - calib.x_center) * 100 / 128;
+	pos.x_percent = ((int16_t)adc_x - calib.x_center) * 100 / calib.x_center;
 	pos.x_percent_CAN=(uint8_t)(pos.x_percent + 128);
 		
 	// Convert ADC value to percentage for Y-axis
-	pos.y_percent = ((int16_t)adc_y - calib.y_center) * 100 / 128;
+	pos.y_percent = ((int16_t)adc_y - calib.y_center) * 100 / calib.y_center;
 	pos.y_percent_CAN=(uint8_t)(pos.y_percent + 128);
 	
 	return pos;

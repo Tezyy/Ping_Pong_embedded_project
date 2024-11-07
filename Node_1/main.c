@@ -166,7 +166,9 @@ int main(void)
 	XMEM_init();
 	SRAM_test();
 	adc_init();
+	_delay_ms(500);
 	JoystickCalibration calib = calibrateJoystick();
+	printf ("calibration x : %d y : %d \r\n",calib.x_center, calib.y_center);
 	oled_init();
 	// init_spi() directly in mcp2515_init();
 	// mcp2515_init(); directly in Can_init
@@ -188,6 +190,7 @@ int main(void)
 				
 		adc_data_t adc_inputs = adc_read();
  		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
+		 printf("adc inputs x : %d y : %d\n", adc_inputs.joystick_x, adc_inputs.joystick_y);
 		direction = getJoystickDirection(pos);
 
 		Buttons state = buttons_read();
@@ -225,7 +228,8 @@ int main(void)
 			CAN_send(&mess);
 			_delay_ms(10);
 		}
-		//printf("x_can :%d , y_can : %d\n",pos.x_percent_CAN,pos.y_percent_CAN);
+		printf("x_can :%d  and percentage %d\n",pos.x_percent_CAN, pos.x_percent);
+		printf("y_can : %d\n", pos.y_percent_CAN);
 		// maintenant c'est bon on peut faire nos tests et modifs
 		
 		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
