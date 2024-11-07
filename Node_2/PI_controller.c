@@ -3,8 +3,8 @@
 #include "motor.h"
 #include "can.h"
 
-#define KP 1.0       // Proportional gain
-#define KI 0.1       // Integral gain
+#define KP 1.0       // si Kp augmente, le système réagisse + rapidement
+#define KI 0.1       // Ki corrige l'erreur de régime permanent. S'il est trop grand, il peut ralentir la réponse du systeme et provoquer des oscillations persistantes
 #define PWM_MAX 19000
 #define PWM_MIN 0
 
@@ -40,13 +40,13 @@ int16_t calculate_PI_output(uint16_t current_position, uint16_t target_position)
 
 //et apres dans le main :
 // Read current encoder position
-        uint16_t current_position = read_encoder_position();
+        //uint16_t current_position = read_encoder_position();
         
         // Read target position from joystick
-        uint16_t target_position = receive_can.byte[0]; //et ouais mais non à modifier ça en fct des valeurs de l'encodeur
+        //uint16_t target_position = receive_can.byte[0]; //et ouais mais non à modifier ça en fct des valeurs de l'encodeur
         
         // Calculate PI control output
-        int16_t pwm_output = calculate_PI_output(current_position, target_position);
+        //int16_t pwm_output = calculate_PI_output(current_position, target_position);
         
         // Set motor PWM
-        set_motor_pwm(pwm_output);
+        //set_motor_pwm(pwm_output);
