@@ -37,8 +37,7 @@ void start_score_timer(void) {
 
 uint64_t stop_score_timer(void) {
 	end_time = time_now();
-
-	return end_time - start_time;  //return le temps écoulé
+	return (end_time - start_time);  //return le temps écoulé
 }
 
 void reset_score_timer(void) {

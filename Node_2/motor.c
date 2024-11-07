@@ -14,12 +14,17 @@ void PWM_motor_init() {
 	
 	// Enable PIOB and PWM peripheral clocks
     PMC->PMC_PCER0 |= (1 << ID_PIOB);  // Enable clock for PIOB
+	PMC->PMC_PCER0 |= (1 << ID_PIOC);  // Enable clock for PIOC
     //PMC->PMC_PCER1 |= (1 << (ID_PWM - 32));  // Enable clock for PWM
 	PMC->PMC_PCER1|=PMC_PCER1_PID36;
 
-    // Configure PIOB pin 13 (PB13) for PWM output
+    // Configure PIOB pin 12 (PB12) for PWM output
     PIOB->PIO_PDR |= PIO_PDR_P12;    // Disable PIO control for PB12 (peripheral control)
     PIOB->PIO_ABSR |= PIO_ABSR_P12;  // Select peripheral B for PB12 (PWM functionality)
+	
+	// enable PIO and enable Output
+	PIOC->PIO_PER |= PIO_PER_P23;
+	PIOC->PIO_OER |= PIO_OER_P23;
 
 	// Set the PWM clock (PWM_CLK is MCK divided by a prescaler)
 	PWM->PWM_CLK = PWM_CLK_PREA(0) | PWM_CLK_DIVA(84); 
@@ -39,6 +44,7 @@ void PWM_motor_init() {
 
 	// Enable the PWM channel
 	PWM->PWM_ENA = (1 << PWM_CHANNEL_MOTOR);
+
 }
 
 //takes a value between 900 and 2100 (actually 0 and 20000 but will use a value in this range)
@@ -59,17 +65,22 @@ void set_PWM_duty_motor(uint16_t pulse_width) { //change of uint16_t with float
 
 uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.byte[1]-128 [-128, 128]
 	uint16_t result = 0;
-	if (input_joystick < 0){
+	
+	
+	if (input_joystick < -15){
 		if (input_joystick < -110) input_joystick =-110;
-		input_joystick =-input_joystick;
+		input_joystick = -input_joystick;
+		//PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
 		result = (uint16_t)(181.8*input_joystick);
-		//PIOB->PIO_SODR = PIO_PB12;  // Forward direction (PHASE = 1)		
 	}
 		
-	else if (0 < input_joystick) {
+	if (input_joystick>15) {
 		if (input_joystick > 110) input_joystick = 110;
+		//PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
 		result = (uint16_t)(181.8*input_joystick);
-		//PIOB->PIO_CODR = PIO_PB12;  // Reverse direction (PHASE = 0)	
+	}
+	else {
+	result=0;
 	}
 	
 	printf("result = %d\n\r", result);

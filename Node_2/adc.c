@@ -8,10 +8,10 @@
 void adc_init(void){
 	
 	//PMC->PMC_PCR = PMC_PCR_EN
-	PMC->PMC_PCER1 |= PMC_PCER1_PID37; 	//set the clock : ID ADC = 37 mais registre sÃ©parÃ© en 2
+	PMC->PMC_PCER1 |= PMC_PCER1_PID37; 	//set the clock : ID ADC = 37 mais registre séparé en 2
 
 	//donc -32 pour arriver au bon endroit,
-	//2 regsitres PMC lÃ  on est dans le 1, et on veut 5
+	//2 regsitres PMC là on est dans le 1, et on veut 5
 	ADC->ADC_CR=ADC_CR_START;
 	ADC->ADC_CHER = ADC_CHER_CH1; 	//Set AD0 en output
 	ADC->ADC_MR = ADC_MR_FREERUN; 	//Set ADC to free run mode

@@ -66,9 +66,9 @@ void set_PWM_duty(uint16_t pulse_width) { //change of uint16_t with float
 
 // -180< INPUT <180
 uint16_t PWM_value(int8_t input_joystick){
-	int pwm_cdty = 0;
+	//int pwm_cdty = 0;
 	uint16_t result =0;
-	// printf("input PWM_value : %d\n", input_joystick);
+	//printf("input PWM_value : %d\n", input_joystick);
 	//check if not too big
 	if (input_joystick < -110) input_joystick =-110;
 	else if (input_joystick > 110) input_joystick = 110;
@@ -76,13 +76,13 @@ uint16_t PWM_value(int8_t input_joystick){
 	if (input_joystick >0) input_joystick = input_joystick/0.72; //change of base because value max of x=72
 	else if (input_joystick < 0) input_joystick = input_joystick/1.26;
 	else input_joystick = 0;
-	// printf("input PWM_value 2: %d\n", input_joystick);
+	//printf("input PWM_value 2: %d\n", input_joystick);
 	
 	input_joystick = input_joystick/1.1;
 	//int8_t input_min = -100.0, input_max = 100.0;
 	//int8_t out_min = 0.9, out_max = 2.1;
 	//printf("input PWM_value 3: %d\n", input_joystick);
-	result=(uint16_t)(5.9*(input_joystick) +1500);
+	result=(uint16_t)(-5.9*(input_joystick) +1500);
 	//printf("pwm_dcty : %d\n",result);
 	return result;
 }

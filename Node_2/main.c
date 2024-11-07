@@ -2,6 +2,7 @@
 #include "PWM_driver.h"
 #include "time.h"
 #include "adc.h"
+#include "game.h"
 #include "timer_score.h"
 #include "uart.h"
 #include "motor.h"
@@ -32,6 +33,7 @@ static uint8_t button_state = 0;
 static uint8_t game_start = 0; //0 if the game is not started, 1 if it is
 static uint8_t game_running =0;
 static uint8_t game_end =0;
+
 int main()
 {
 	SystemInit();
@@ -47,13 +49,18 @@ int main()
 
 	time_init();
 	adc_init();
+	init_TC2_quadrature_mode();
+	PWM_motor_init();
 	//score = time_now();
 	while (1)
 	{
 		if ((game_running !=1) && (game_end !=1)){
-		printf("en attente du joueur...\r\n");
+		printf("waiting for player...\r\n");
+		printf("_______________________\r\n");
+		set_PWM_duty_motor(0);
+		set_PWM_duty(0);
 		}
-		if(can_rx(&receive_can)){
+		if(can_rx(&receive_can)){ // && game_running !=1
 			//printf("message id %d\r\n", receive_can.id);
 			if (receive_can.id == 11) {
 				
@@ -74,7 +81,15 @@ int main()
 			switch (receive_can.id){
 				case ID_JOYSTICK :
 					//printf("id joystick");
-					set_PWM_duty(PWM_value((receive_can.byte[0]-128)));
+					set_PWM_duty(PWM_value((receive_can.byte[1]-128)));
+					printf("receive byte[0] : %d \r\n", (receive_can.byte[0]-128));
+					if ((receive_can.byte[0]-128)>15){
+						PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
+					}
+					else if ((receive_can.byte[0]-128)<-15){
+						PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
+					}
+					set_PWM_duty_motor(PWM_value_motor((receive_can.byte[0]-128)));
 					break;
 				case ID_BUTTON_RIGHT :
 					button_state = receive_can.byte[0];
@@ -87,17 +102,21 @@ int main()
 				score =stop_score_timer();
 				printf("SCORE %f seconds \r\n",totalSeconds(score));
 				game_running=0;
-				game_end =1;
+				game_end =0;
 				
 			}
 			
 		}
-		if (game_end !=0){
-			printf("TU AS PERDU...");
-		}
+// 		if (game_end !=0){
+// 			printf("TU AS PERDU...");
+// 		}
 		
+		uint16_t position =read_encoder_position();
+		//printf ("encoder position : %u \r\n", position);
+		//for (volatile int i =0; i<1000000; i++);
 // 		printf("adc value adr0 : %d\r\n", score);
-// 		
+		
+		
 		
 	}
 	
