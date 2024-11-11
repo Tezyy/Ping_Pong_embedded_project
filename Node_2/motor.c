@@ -1,6 +1,4 @@
 #include "motor.h"
-#include "can.h"
-#include "time.h"
 #include <sam.h>
 
 #define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
@@ -85,91 +83,7 @@ uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.
 	result=0;
 	}
 	
-	//printf("result = %d\n\r", result);
+	printf("result = %d\n\r", result);
 	return result;
 }
  
-uint16_t wanted_encoder_position(uint8_t joystick_x){
-	uint16_t wanted_position = 0;
-	printf("joystick x dans fonction :  %d \n\r", joystick_x);
-	if (joystick_x < 30){
-		wanted_position = 10;
-	}
-	else if (joystick_x > 30 && joystick_x < 60){
-		wanted_position = 611;
-	}
-	else if (joystick_x > 60 && joystick_x < 90){
-		wanted_position = 1300;
-	}
-	else if (joystick_x > 90 && joystick_x < 110){
-		wanted_position = 2000;
-	}
-	else if (joystick_x > 110 && joystick_x < 130){
-		wanted_position = 2750;
-	}
-	else if (joystick_x > 130 && joystick_x < 140){
-		wanted_position = 3300;
-	}
-	else if (joystick_x > 140 && joystick_x < 150){
-		wanted_position = 3850;
-	}
-	else if (joystick_x > 150 && joystick_x < 160){
-		wanted_position = 4400;
-	}
-	else if (joystick_x > 160 && joystick_x < 170){
-		wanted_position = 4950;
-	}
-	else if (joystick_x > 170){
-		wanted_position = 5500;
-	}
-	
-	return wanted_position;
-}
-
-void stop_motor() {
-	set_PWM_duty_motor(0); // Set speed to 0
-}
-
-uint16_t control_motor_to_position(uint16_t current_position, uint16_t wanted_position) { //PI
-	uint16_t error = wanted_position - current_position;
-	uint16_t integral = 0;
-	
-	const float KP = 0.5;     // Proportional gain
-	const float KI = 0.05;    // Integral gain
-
-	// Proportional term
-	uint16_t proportional = KP * error;
-
-	// Integral term (accumulating error over time)
-	integral += error;
-	uint16_t integral_term = KI * integral;
-
-	// Control signal for motor speed
-	uint16_t control_signal = proportional + integral_term;
-	
-	return control_signal;
-}
-
-void set_motor_position(uint16_t current_position, uint16_t wanted_position){
-	if (wanted_position > current_position){
-		while (wanted_position != current_position){
-			PIOC->PIO_SODR = PIO_PC23; // Forward direction (PHASE = 1)
-			set_PWM_duty_motor(10000); // fixe pour le moment
-		}
-	}
-	else{
-		while (wanted_position != current_position){
-			PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
-			set_PWM_duty_motor(10000);
-		}
-	}
-	
-}
-
-void set_motor_left(){
-	uint64_t duration = seconds(2);
-	uint64_t time = time_now();
-	while (time_now - time < duration){
-		PIOC->PIO_CODR = PIO_PC23;
-	}
-}
