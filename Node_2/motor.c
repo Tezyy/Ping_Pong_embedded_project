@@ -85,90 +85,69 @@ uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.
 	result=0;
 	}
 	
-	printf("result = %d\n\r", result);
+	//printf("result = %d\n\r", result);
 	return result;
 }
  
-uint16_t wanted_encoder_position(int8_t joystick_x){
+uint16_t wanted_encoder_position(uint8_t joystick_x){
 	uint16_t wanted_position = 0;
-	if (joystick_x < 20){
-		wanted_position = 0;
+	printf("joystick x dans fonction :  %d \n\r", joystick_x);
+	if (joystick_x < 30){
+		wanted_position = 10;
 	}
-	if (joystick_x > 20 && joystick_x < 40){
-		wanted_position = 509;
+	else if (joystick_x > 30 && joystick_x < 60){
+		wanted_position = 611;
 	}
-	if (joystick_x > 40 && joystick_x < 60){
-		wanted_position = 1018;
+	else if (joystick_x > 60 && joystick_x < 90){
+		wanted_position = 1300;
 	}
-	if (joystick_x > 60 && joystick_x < 80){
-		wanted_position = 1527;
+	else if (joystick_x > 90 && joystick_x < 110){
+		wanted_position = 2000;
 	}
-	if (joystick_x > 80 && joystick_x < 100){
-		wanted_position = 2036;
+	else if (joystick_x > 110 && joystick_x < 130){
+		wanted_position = 2750;
 	}
-	if (joystick_x > 100 && joystick_x < 120){
-		wanted_position = 2545;
+	else if (joystick_x > 130 && joystick_x < 140){
+		wanted_position = 3300;
 	}
-	if (joystick_x > 120 && joystick_x < 140){
-		wanted_position = 3054;
+	else if (joystick_x > 140 && joystick_x < 150){
+		wanted_position = 3850;
 	}
-	if (joystick_x > 140 && joystick_x < 160){
-		wanted_position = 3563;
+	else if (joystick_x > 150 && joystick_x < 160){
+		wanted_position = 4400;
 	}
-	if (joystick_x > 160 && joystick_x < 180){
-		wanted_position = 4072;
+	else if (joystick_x > 160 && joystick_x < 170){
+		wanted_position = 4950;
 	}
-	if (joystick_x > 180 && joystick_x < 200){
-		wanted_position = 4581;
+	else if (joystick_x > 170){
+		wanted_position = 5500;
 	}
-	if (joystick_x > 200 && joystick_x < 220){
-		wanted_position = 5090;
-	}
-	if (joystick_x > 220){
-		wanted_position = 5600;
-	}
+	
 	return wanted_position;
-}
-
-void set_motor_forward() {
-	PIOC->PIO_SODR = PIO_PC23;  // Forward direction
-}
-
-void set_motor_reverse() {
-	PIOC->PIO_CODR = PIO_PC23;  // Reverse direction
 }
 
 void stop_motor() {
 	set_PWM_duty_motor(0); // Set speed to 0
 }
 
-void control_motor_to_position(uint16_t current_position, uint16_t wanted_position) {
-	int16_t error = wanted_position - current_position;
-	int16_t integral = 0;
+uint16_t control_motor_to_position(uint16_t current_position, uint16_t wanted_position) { //PI
+	uint16_t error = wanted_position - current_position;
+	uint16_t integral = 0;
 	
 	const float KP = 0.5;     // Proportional gain
 	const float KI = 0.05;    // Integral gain
 
 	// Proportional term
-	int16_t proportional = KP * error;
+	uint16_t proportional = KP * error;
 
 	// Integral term (accumulating error over time)
 	integral += error;
-	int16_t integral_term = KI * integral;
+	uint16_t integral_term = KI * integral;
 
 	// Control signal for motor speed
-	int16_t control_signal = proportional + integral_term;
-
-	// Determine motor direction based on control signal sign
-	if (control_signal > 0) {
-		set_motor_forward();
-		set_PWM_duty_motor(control_signal); // valeurs de control_signal pas adaptées ??
-		} else if (control_signal < 0) {
-		set_motor_reverse();
-		set_PWM_duty_motor(-control_signal); 
-		} else {
-		stop_motor(); // If control signal is zero, stop the motor
-	}
+	uint16_t control_signal = proportional + integral_term;
+	
+	return control_signal;
 }
 
 void set_motor_position(uint16_t current_position, uint16_t wanted_position){
@@ -187,10 +166,10 @@ void set_motor_position(uint16_t current_position, uint16_t wanted_position){
 	
 }
 
- void set_motor_left(){
-	 uint64_t duration = seconds(2);
-	 uint64_t time = time_now();
-	 while (time_now - time < duration){
-		 set_motor_reverse();
-	 }	 
- }
+void set_motor_left(){
+	uint64_t duration = seconds(2);
+	uint64_t time = time_now();
+	while (time_now - time < duration){
+		PIOC->PIO_CODR = PIO_PC23;
+	}
+}
