@@ -1,4 +1,6 @@
 #include "motor.h"
+#include "can.h"
+#include "time.h"
 #include <sam.h>
 
 #define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
@@ -87,3 +89,108 @@ uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.
 	return result;
 }
  
+uint16_t wanted_encoder_position(int8_t joystick_x){
+	uint16_t wanted_position = 0;
+	if (joystick_x < 20){
+		wanted_position = 0;
+	}
+	if (joystick_x > 20 && joystick_x < 40){
+		wanted_position = 509;
+	}
+	if (joystick_x > 40 && joystick_x < 60){
+		wanted_position = 1018;
+	}
+	if (joystick_x > 60 && joystick_x < 80){
+		wanted_position = 1527;
+	}
+	if (joystick_x > 80 && joystick_x < 100){
+		wanted_position = 2036;
+	}
+	if (joystick_x > 100 && joystick_x < 120){
+		wanted_position = 2545;
+	}
+	if (joystick_x > 120 && joystick_x < 140){
+		wanted_position = 3054;
+	}
+	if (joystick_x > 140 && joystick_x < 160){
+		wanted_position = 3563;
+	}
+	if (joystick_x > 160 && joystick_x < 180){
+		wanted_position = 4072;
+	}
+	if (joystick_x > 180 && joystick_x < 200){
+		wanted_position = 4581;
+	}
+	if (joystick_x > 200 && joystick_x < 220){
+		wanted_position = 5090;
+	}
+	if (joystick_x > 220){
+		wanted_position = 5600;
+	}
+	return wanted_position;
+}
+
+void set_motor_forward() {
+	PIOC->PIO_SODR = PIO_PC23;  // Forward direction
+}
+
+void set_motor_reverse() {
+	PIOC->PIO_CODR = PIO_PC23;  // Reverse direction
+}
+
+void stop_motor() {
+	set_PWM_duty_motor(0); // Set speed to 0
+}
+
+void control_motor_to_position(uint16_t current_position, uint16_t wanted_position) {
+	int16_t error = wanted_position - current_position;
+	int16_t integral = 0;
+	
+	const float KP = 0.5;     // Proportional gain
+	const float KI = 0.05;    // Integral gain
+
+	// Proportional term
+	int16_t proportional = KP * error;
+
+	// Integral term (accumulating error over time)
+	integral += error;
+	int16_t integral_term = KI * integral;
+
+	// Control signal for motor speed
+	int16_t control_signal = proportional + integral_term;
+
+	// Determine motor direction based on control signal sign
+	if (control_signal > 0) {
+		set_motor_forward();
+		set_PWM_duty_motor(control_signal); // valeurs de control_signal pas adaptées ??
+		} else if (control_signal < 0) {
+		set_motor_reverse();
+		set_PWM_duty_motor(-control_signal); 
+		} else {
+		stop_motor(); // If control signal is zero, stop the motor
+	}
+}
+
+void set_motor_position(uint16_t current_position, uint16_t wanted_position){
+	if (wanted_position > current_position){
+		while (wanted_position != current_position){
+			PIOC->PIO_SODR = PIO_PC23; // Forward direction (PHASE = 1)
+			set_PWM_duty_motor(10000); // fixe pour le moment
+		}
+	}
+	else{
+		while (wanted_position != current_position){
+			PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
+			set_PWM_duty_motor(10000);
+		}
+	}
+	
+}
+
+ void set_motor_left(){
+	 uint64_t duration = seconds(2);
+	 uint64_t time = time_now();
+	 while (time_now - time < duration){
+		 set_motor_reverse();
+	 }	 
+ }
