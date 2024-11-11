@@ -13,5 +13,12 @@
 void PWM_motor_init(void);
 void set_PWM_duty_motor(uint16_t pulse_width);
 uint16_t PWM_value_motor(int8_t input_joystick);
+uint16_t wanted_encoder_position(int8_t joystick_x);
+void set_motor_forward();
+void set_motor_reverse();
+void stop_motor();
+void control_motor_to_position(uint16_t current_position, uint16_t wanted_position);
+void set_motor_position(uint16_t current_position, uint16_t wanted_position);
+void set_motor_left();
 
 #endif // MOTOR_H
