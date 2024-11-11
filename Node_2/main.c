@@ -51,6 +51,7 @@ int main()
 	adc_init();
 	init_TC2_quadrature_mode();
 	PWM_motor_init();
+	set_motor_left();
 	//score = time_now();
 	while (1)
 	{
@@ -83,19 +84,25 @@ int main()
 					//printf("id joystick");
 					set_PWM_duty(PWM_value((receive_can.byte[1]-128)));
 					printf("receive byte[0] : %d \r\n", (receive_can.byte[0]-128));
-					if ((receive_can.byte[0]-128)>15){
-						PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
-					}
-					else if ((receive_can.byte[0]-128)<-15){
-						PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
-					}
-					set_PWM_duty_motor(PWM_value_motor((receive_can.byte[0]-128)));
+// 					if ((receive_can.byte[0]-128)>15){
+// 						PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
+// 					}
+// 					else if ((receive_can.byte[0]-128)<-15){
+// 						PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
+// 					}
+					uint16_t current_position = read_encoder_position();
+					uint16_t position_wanted = wanted_encoder_position(receive_can.byte[0]); 
+					control_motor_to_position(current_position, position_wanted);
+					//set_motor_position(current_position, position_wanted);				
+
 					break;
+					
 				case ID_BUTTON_RIGHT :
 					button_state = receive_can.byte[0];
 					printf("test button state : %u\r\n",button_state);
 					break;
 			}
+			
 			adc_value=adc_read();
 			if (adc_value <500){
 				printf("adc value %u", adc_value);
@@ -105,14 +112,13 @@ int main()
 				game_end =0;
 				
 			}
-			// METTRE game_end =1 dans le if,puis fonction qui envoie le score au node 1 et remet 
-			// le game_end à 0 pour être prêt à repartir à jouer
+			
 		}
 // 		if (game_end !=0){
 // 			printf("TU AS PERDU...");
 // 		}
 		
-		uint16_t position =read_encoder_position();
+		
 		//printf ("encoder position : %u \r\n", position);
 		//for (volatile int i =0; i<1000000; i++);
 // 		printf("adc value adr0 : %d\r\n", score);
