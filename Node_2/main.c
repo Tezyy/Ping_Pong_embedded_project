@@ -20,6 +20,7 @@
 #define ID_JOYSTICK 12
 #define ID_BUTTON_RIGHT 13
 
+
 CanInit_t bit_timing = {.phase2 = 5, .propag = 1, .phase1 = 6, .sjw = 0, .brp = 41, .smp = 0};
 
 CanMsg receive_can;
@@ -51,6 +52,7 @@ int main()
 	adc_init();
 	init_TC2_quadrature_mode();
 	PWM_motor_init();
+	game_init();
 	//score = time_now();
 	while (1)
 	{
@@ -81,29 +83,31 @@ int main()
 			switch (receive_can.id){
 				case ID_JOYSTICK :
 					//printf("id joystick");
-					set_PWM_duty(PWM_value((receive_can.byte[1]-128)));
-					//printf("receive byte[0] : %d \r\n", (receive_can.byte[0]-128));
-					if (receive_can.byte[0]>160){
+					set_PWM_duty(PWM_value((receive_can.byte[1]-128))); //servo
+					
+					//Joystick moteur
+					if (receive_can.byte[0]>180){
 						PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
-						//set_PWM_duty_motor(PWM_value_motor((receive_can.byte[0]-128)));
-						//printf("droite");
-						set_PWM_duty_motor(9000);
+						set_PWM_duty_motor(7000);
 					}
-					else if (receive_can.byte[0]<100){
+					else if (receive_can.byte[0]<80){
 						PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
-						//printf("gauche");
-						set_PWM_duty_motor(9000);
+						set_PWM_duty_motor(7000);
 					}
 					else if (receive_can.byte[0]>100 && receive_can.byte[0]<160){
-						//printf("bouge_plus");
 						set_PWM_duty_motor(0);
 					}
+
+					solenoid (0);
 					
 					break;
 				case ID_BUTTON_RIGHT :
 					button_state = receive_can.byte[0];
 					printf("test button state : %u\r\n",button_state);
+					solenoid(1);
+					solenoid(0);
 					break;
+				
 			}
 			adc_value=adc_read();
 			if (adc_value <500){
