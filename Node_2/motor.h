@@ -12,6 +12,6 @@
 // Function prototypes
 void PWM_motor_init(void);
 void set_PWM_duty_motor(uint16_t pulse_width);
-uint16_t PWM_value_motor(int8_t input_joystick);
+//uint16_t PWM_value_motor(int8_t input_joystick);
 
 #endif // MOTOR_H
