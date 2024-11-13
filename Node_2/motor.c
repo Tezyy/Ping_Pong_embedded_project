@@ -1,5 +1,8 @@
 #include "motor.h"
+
+
 #include <sam.h>
+
 
 #define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
 #define PWM_MAX 19000
@@ -8,7 +11,10 @@
 #define PWM_CHANNEL_MOTOR 0         // Use PWM channel 0
 #define PB12_PIN 12           // PB12 corresponds to pin 12
 
+uint16_t pseudo_target;
+
 //set_PWM_duty_motor(PWM_value_motor((receive_can.byte[1]-128)));
+
 
 void PWM_motor_init() {
 	
@@ -47,7 +53,7 @@ void PWM_motor_init() {
 
 }
 
-//takes a value between 900 and 2100 (actually 0 and 20000 but will use a value in this range)
+//takes a value between 0 and 20000 
 void set_PWM_duty_motor(uint16_t pulse_width) { //change of uint16_t with float
 	if (pulse_width < PWM_MIN) {
 		pulse_width = PWM_MIN;  // Clamp to minimum
@@ -63,7 +69,8 @@ void set_PWM_duty_motor(uint16_t pulse_width) { //change of uint16_t with float
     PWM->PWM_SCUC = PWM_SCUC_UPDULOCK; //update at the new clock cycle
 }
 
-uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.byte[1]-128 [-128, 128]
+
+/*uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.byte[1]-128 [-128, 128]
 	uint16_t result = 0;
 	
 	
@@ -85,5 +92,8 @@ uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.
 	
 	printf("result = %d\n\r", result);
 	return result;
-}
+}*/
+
+
+
  
