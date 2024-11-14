@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef MENU_H
+#define MENU_H
 #include "joystick.h"
 #include "oled.h"
 
@@ -17,5 +17,5 @@ void fleche();
 void print_menu();
 void choix_menu(uint8_t current_selection);
 
-#endif // GRAPHICS_H
+#endif // MENU_H
 
