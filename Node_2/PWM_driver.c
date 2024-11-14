@@ -5,18 +5,10 @@
 #define MIN_PULSE_WIDTH 900   // Minimum pulse width in microseconds (0.9 ms)
 #define MAX_PULSE_WIDTH 2100  // Maximum pulse width in microseconds (2.1 ms)
 #define MID_PULSE_WIDTH 1500  // Middle/Neutral pulse width in microseconds (1.5 ms)
-
 #define PWM_CHANNEL 1         // Use PWM channel 1
 #define PB13_PIN 13           // PB13 corresponds to pin 13
 
 void PWM_init() {
-	
-// 	// Enable peripheral clock for PWM
-// 	PMC->PMC_PCER1 |= PMC_PCER1_PID36;
-// 
-// 	// Set PWM channel mode for PB13
-// 	PIOB->PIO_PDR |= (1 << PB13_PIN);  // Disable PIO control for PB13
-// 	PIOB->PIO_ABSR |= (1 << PB13_PIN); // Set PB13 for Peripheral B (PWM)
 	
 	// Enable PIOB and PWM peripheral clocks
     PMC->PMC_PCER0 |= (1 << ID_PIOB);  // Enable clock for PIOB
@@ -57,7 +49,6 @@ void set_PWM_duty(uint16_t pulse_width) { //change of uint16_t with float
 	else if (pulse_width > MAX_PULSE_WIDTH) {
 		pulse_width = MAX_PULSE_WIDTH;  // Clamp to maximum
 		}
-	
 
 	// Set the new duty cycle (pulse width)
 	PWM->PWM_CH_NUM[PWM_CHANNEL].PWM_CDTYUPD = pulse_width;
@@ -66,23 +57,18 @@ void set_PWM_duty(uint16_t pulse_width) { //change of uint16_t with float
 
 // -180< INPUT <180
 uint16_t PWM_value(int8_t input_joystick){
-	//int pwm_cdty = 0;
 	uint16_t result =0;
-	//printf("input PWM_value : %d\n", input_joystick);
 	//check if not too big
 	if (input_joystick < -110) input_joystick =-110;
 	else if (input_joystick > 110) input_joystick = 110;
+	else if (input_joystick > -50 && input_joystick < 50) input_joystick = 0;
 	
 	if (input_joystick >0) input_joystick = input_joystick/0.72; //change of base because value max of x=72
 	else if (input_joystick < 0) input_joystick = input_joystick/1.26;
 	else input_joystick = 0;
-	//printf("input PWM_value 2: %d\n", input_joystick);
 	
 	input_joystick = input_joystick/1.1;
-	//int8_t input_min = -100.0, input_max = 100.0;
-	//int8_t out_min = 0.9, out_max = 2.1;
-	//printf("input PWM_value 3: %d\n", input_joystick);
 	result=(uint16_t)(-5.9*(input_joystick) +1500);
-	//printf("pwm_dcty : %d\n",result);
+
 	return result;
 }
