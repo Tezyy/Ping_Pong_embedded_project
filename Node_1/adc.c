@@ -32,10 +32,7 @@ void adc_init(){
 	OCR1AH=0x0;
 	OCR1AL=0x1;
 	
-	DDRD &= ~(1<<DDD4); //set PD4 to input
-	
-	//DDRD = (1<<DDD7); // ??
-	 
+	DDRD &= ~(1<<DDD4); //set PD4 to input	 
 }
 
 adc_data_t adc_read()
@@ -54,7 +51,4 @@ adc_data_t adc_read()
 	adc_inputs.slider_right=adc_start_address[0]; //canal 3 
 	
 	return adc_inputs;
-
-	//printf("\r");
-	//printf("x : %8d | y: %8d ", adc_inputs.joystick_x, adc_inputs.joystick_y);
 }
