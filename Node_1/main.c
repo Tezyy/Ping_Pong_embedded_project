@@ -170,17 +170,14 @@ int main(void)
 	JoystickCalibration calib = calibrateJoystick();
 	printf ("calibration x : %d y : %d \r\n",calib.x_center, calib.y_center);
 	oled_init();
-	// init_spi() directly in mcp2515_init();
-	// mcp2515_init(); directly in Can_init
-	CAN_init();
-	// mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE if desired
+	CAN_init(); //contain init_spi() and mcp2515_init()
 	
 	print_menu();
 	
 	//declaration
 	uint8_t current_selection=0;
 	
-	//mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE
+	//mcp2515_modify_bit(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK); //LOOPBACK MODE if desired, to check node 1
 		
 	while(1)
 	{
@@ -189,8 +186,9 @@ int main(void)
 		JoystickDirection direction;
 				
 		adc_data_t adc_inputs = adc_read();
+		
  		pos = getJoystickPosition(adc_inputs.joystick_x, adc_inputs.joystick_y, calib);
-		 printf("adc inputs x : %d y : %d\n", adc_inputs.joystick_x, adc_inputs.joystick_y);
+		printf("adc inputs x : %d y : %d\n", adc_inputs.joystick_x, adc_inputs.joystick_y);
 		direction = getJoystickDirection(pos);
 
 		Buttons state = buttons_read();
@@ -213,12 +211,10 @@ int main(void)
 				case 0 : oled_print_string("The game starts"); 
 				message_t mess_game={.id=11, .length=1, .data[0]=1 };
 				CAN_send(&mess_game);
-				printf("jeu démarré");
 				_delay_ms(10);
 				break;
-				case 1 : oled_print_string("Choice : 2"); break;
-				case 2 : oled_print_string("Choice : 3"); break;
-				case 3 : oled_print_string("Choice : 4"); break;
+				case 1 : oled_print_string("Choice : 2"); 
+				break;
 			}
 		}
 		
@@ -228,16 +224,14 @@ int main(void)
 			CAN_send(&mess);
 			_delay_ms(10);
 		}
+		
 		printf("x_can :%d  and percentage %d\n",pos.x_percent_CAN, pos.x_percent);
 		printf("y_can : %d\n", pos.y_percent_CAN);
 		// maintenant c'est bon on peut faire nos tests et modifs
 		
-		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));  // Convert percentage to unsigned values
-		//message_t mess={.id=12, .length=2, .data[0]=1, .data[1]=56 };
-		//CAN_send(&mess);
-		//printf("hey\n");
+		sendJoystickPositionCAN((uint8_t)(pos.x_percent_CAN), (uint8_t)(pos.y_percent_CAN));
+		
 		_delay_ms(10);
-
 	}
 			
 	return(0);
