@@ -24,19 +24,6 @@ uint8_t mcp2515_read(uint8_t adress){
 
 }
 
-// void MCP2515_read(uint8_t addr, uint8_t *data_buffer, int buffer_size)
-// {
-//     clear_bit(PORTB, PB4);
-
-//     SPI_shift_data(MCP_READ);
-
-//     SPI_shift_data(addr);
-
-//     for (int i = 0; i < buffer_size; i++)
-//     data_buffer[i] = SPI_shift_data(DONT_CARE);
-
-//     clear_bit(PORTB, PB4);
-// }
 
 uint8_t mcp2515_write(uint8_t adress, uint8_t *data, uint8_t buffer_size ){
 	clear_bit(PORTB, PB4);
@@ -47,7 +34,6 @@ uint8_t mcp2515_write(uint8_t adress, uint8_t *data, uint8_t buffer_size ){
 
 	for (int i = 0; i < buffer_size; i++){
 	spi_data(data[i]);
-	//printf("\nin mcp2515 : %d\n",data[i]);
 	}
 	set_bit(PORTB, PB4);
 }
