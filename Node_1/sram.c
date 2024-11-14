@@ -8,14 +8,12 @@
 
 #include "sram.h"
 
-
 void XMEM_init(void)
 {
 	MCUCR |= (1 << SRE); // enable XMEM
 	SFIOR |= (1 << XMM2); // Mask PC7-PC4 for JTAG
 
 }
-
 
 void XMEM_write(uint8_t data, uint16_t addr)
 {
