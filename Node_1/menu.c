@@ -1,8 +1,9 @@
 #include "menu.h"
 #include "joystick.h"
+#include "oled.h"
 #include <string.h>
 
-
+//design of the arrow
 void fleche(){
 	oled_print_char('<');oled_print_char('-');
 }
@@ -32,3 +33,4 @@ void choix_menu(uint8_t current_selection){
 		}
 	}
 }
+
