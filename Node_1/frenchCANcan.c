@@ -12,7 +12,6 @@ volatile int data_pending = 0;
 
 ISR(INT0_vect) { data_pending = 1; }
 
-// Function to initialize CAN communication
 uint8_t CAN_init(void) {
 	if (mcp2515_init()) {
 		printf("MCP2515 initialization failed!\n");
@@ -64,32 +63,21 @@ uint8_t CAN_init(void) {
 	return 0;
 }
 
-// Function to send a CAN message
 int CAN_send(message_t *msg) {
 	
 	cli();
 	uint8_t status = mcp2515_read_status();
-	//printf("\nmsg_id: %d et status %d et  %d\n",msg->id,status,status & 0b100 | msg->length > 8);
 	
 	// Load the ID and data into the correct transmit buffer of MCP2515
 	uint8_t IDHIGH = (msg->id >> 3);
 	uint8_t IDLOW = (msg->id << 5);
 	mcp2515_write(MCP_TXB0SIDH, &IDHIGH,1);  // Standard ID high, à changer avec les << ou >> ??
 	mcp2515_write(MCP_TXB0SIDL, &IDLOW,1);  // Standard ID low
-	//printf("\nmsg_id2: %d\n",msg->id);
-	
-	// Load the length of the message
-	
+
 	uint8_t total_length =(msg->length);
 	mcp2515_write(MCP_TXB0DLC, &total_length,1);
-	
-	//printf("msg_length: %d\n",msg->length);
-
-	// Load the data
-	//printf("data : %d et %d",msg->data[0],msg->data[1]);
 	mcp2515_write(MCP_TXB0D0, msg->data,msg->length);
 	
-
 	// Request to send the message using the RTS command
 	req_to_send(MCP_RTS_TX0); // Request to send on TX buffer 0
 
@@ -97,11 +85,9 @@ int CAN_send(message_t *msg) {
 	return 0;
 }
 
-// Function to receive a CAN message
 message_t CAN_receive() {
 
 	//verification
-
 	if (!data_pending){printf("data pending CAN_receive");
 	}
 
@@ -122,10 +108,10 @@ message_t CAN_receive() {
 	message.id = id_high << 3 | (id_low & 0b11100000) >> 5;
 
 	uint8_t lgth = mcp2515_read(buffer_addr +0x05);
-	message.length = lgth; // necessaery ?& 0b1111;
+	message.length = lgth;
 
 	for (int i = 0; i < message.length; i++) {
-		message.data[i] = mcp2515_read(buffer_addr +0x06 ); // + i neccessaire ??
+		message.data[i] = mcp2515_read(buffer_addr +0x06 );
 	}
 	return message;
 }
