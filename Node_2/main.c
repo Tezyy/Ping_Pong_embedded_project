@@ -84,6 +84,9 @@ int main()
 				case ID_JOYSTICK :
 					//printf("id joystick");
 					set_PWM_duty(PWM_value((receive_can.byte[1]-128))); //servo
+					uint16_t encoder = read_encoder_position();
+					//printf("encoder : %u\r\n",encoder);
+					
 					
 					//Joystick moteur
 					if (receive_can.byte[0]>180){
