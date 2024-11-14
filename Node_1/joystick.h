@@ -24,8 +24,8 @@ typedef struct {
 } JoystickPosition;
 
 typedef struct {
-	int16_t left_percent;  // Left slider position in percentage (-100 to 100 or 0 to 100)
-	int16_t right_percent; // Right slider position in percentage (-100 to 100 or 0 to 100)
+	int16_t left_percent;
+	int16_t right_percent; 
 } SliderPosition;
 
 typedef struct {
