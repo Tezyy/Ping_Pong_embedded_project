@@ -1,20 +1,12 @@
 #include "motor.h"
-
-
 #include <sam.h>
 
-
-#define PWM_PERIOD 20000      // PWM period in microseconds (20 ms)
-#define PWM_MAX 19000
-#define PWM_MIN 0
-
+#define PWM_PERIOD 20000			// PWM period in microseconds (20 ms)
+#define PWM_MAX 19000				//PWM max
+#define PWM_MIN 0					//PWM min
+#define MID_PULSE_WIDTH 1500		// Middle = 1.5 ms
 #define PWM_CHANNEL_MOTOR 0         // Use PWM channel 0
-#define PB12_PIN 12           // PB12 corresponds to pin 12
-
-uint16_t pseudo_target;
-
-//set_PWM_duty_motor(PWM_value_motor((receive_can.byte[1]-128)));
-
+#define PB12_PIN 12					// PB12 corresponds to pin 12
 
 void PWM_motor_init() {
 	
@@ -68,32 +60,5 @@ void set_PWM_duty_motor(uint16_t pulse_width) { //change of uint16_t with float
 	PWM->PWM_CH_NUM[PWM_CHANNEL_MOTOR].PWM_CDTYUPD = pulse_width;
     PWM->PWM_SCUC = PWM_SCUC_UPDULOCK; //update at the new clock cycle
 }
-
-
-/*uint16_t PWM_value_motor(int8_t input_joystick){ //input_joystick = receive_can.byte[1]-128 [-128, 128]
-	uint16_t result = 0;
-	
-	
-	if (input_joystick < -15){
-		if (input_joystick < -110) input_joystick =-110;
-		input_joystick = -input_joystick;
-		//PIOC->PIO_SODR = PIO_PC23;  // Forward direction (PHASE = 1)
-		result = (uint16_t)(181.8*input_joystick);
-	}
-		
-	if (input_joystick>15) {
-		if (input_joystick > 110) input_joystick = 110;
-		//PIOC->PIO_CODR = PIO_PC23;  // Reverse direction (PHASE = 0)
-		result = (uint16_t)(181.8*input_joystick);
-	}
-	else {
-	result=0;
-	}
-	
-	printf("result = %d\n\r", result);
-	return result;
-}*/
-
-
 
  
