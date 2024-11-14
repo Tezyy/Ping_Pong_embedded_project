@@ -1,4 +1,3 @@
-
 #include "can.h"
 #include <sam.h>
 #include <stdio.h>
